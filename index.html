@@ -1,0 +1,5257 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Genuis Baccarat • Premium</title>
+
+<style>
+.summary{
+ margin:10px auto 14px;
+ padding:12px;
+ max-width:520px;
+ background:linear-gradient(180deg,#050505,#101010);
+ border-radius:12px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.25);
+ font-size:16px;
+ line-height:1.6;
+}
+.summary b{color:#ffd700}
+
+*{box-sizing:border-box}
+body{
+ margin:0;
+ padding:12px;
+ font-family:"Segoe UI",Arial;
+ background:radial-gradient(circle at top,#2a2a2a 0%,#050505 65%);
+ color:#eee;
+}
+.container{
+ max-width:1450px;
+ margin:auto;
+ background:linear-gradient(180deg,#141414,#0b0b0b);
+ padding:18px;
+ border-radius:16px;
+ box-shadow:0 0 40px rgba(255,215,0,.18),
+ inset 0 0 0 1px rgba(255,215,0,.18);
+}
+h1{
+ text-align:center;
+ color:#ffd700;
+ margin:6px 0 14px;
+ letter-spacing:1px;
+ text-shadow:0 0 10px rgba(255,215,0,.4);
+font-size:20px;   /* 🔥 ลดขนาดตรงนี้ */
+}
+
+
+
+.controls{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+ gap:10px;
+ margin-bottom:12px;
+}
+button{
+ padding:10px 20px;
+ font-size:15px;
+ font-weight:600;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
+ color:#fff;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),
+ 0 6px 14px rgba(0,0,0,.7);
+ transition:.18s;
+}
+button:hover{transform:translateY(-1px);opacity:.92}
+.player{background:linear-gradient(#3498db,#1f4f7a)}
+.banker{background:linear-gradient(#e74c3c,#7f1d1d)}
+.tie{background:linear-gradient(#2ecc71,#1e8449)}
+.undo{background:linear-gradient(#9b59b6,#5e3370)}
+.clear{background:linear-gradient(#95a5a6,#5f6a6a)}
+.stats{text-align:center;font-size:16px;margin-bottom:12px}
+
+.road-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.road{
+ background:linear-gradient(180deg,#000,#090909);
+ padding:12px;
+ border-radius:14px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.18),
+ 0 0 16px rgba(0,0,0,.9);
+}
+.road h3{text-align:center;margin:0 0 6px;font-size:15px;color:#ffd700}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(60,26px);
+ grid-template-rows:repeat(6,26px);
+ gap:3px;
+ overflow:hidden;
+}
+.cell{
+ width:26px;height:26px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ font-size:13px;font-weight:bold;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);
+}
+.B{background:#c0392b}
+.P{background:#2980b9}
+.T{background:#27ae60;font-size:11px}
+
+.analysis-grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:14px;
+}
+.analysis{
+ background:linear-gradient(180deg,#060606,#121212);
+ padding:14px;
+ border-radius:16px;
+ box-shadow:inset 0 0 0 1px rgba(255,215,0,.22),
+ 0 0 14px rgba(0,0,0,.9);
+}
+.analysis h3{margin:0 0 4px;font-size:14px;color:#ffd700}
+.desc{font-size:12px;color:#bfbfbf}
+.per{font-size:13px;margin-top:2px}
+.best{
+ color:#00ff99;
+ font-weight:900;
+ font-size:3em;
+ text-shadow:0 0 14px rgba(0,255,153,.9);
+ animation:blink .9s infinite;
+}
+@keyframes blink{50%{opacity:.35}}
+.dna-row{
+ font-size:15px;
+ word-break:break-all;
+ margin-top:4px;
+}
+
+/* ===== DQN RESULT BAR ===== */
+.dqn-dna{
+ margin-top:8px;
+ font-size:18px;
+ letter-spacing:4px;
+}
+
+.dqn-stat{
+ margin-top:6px;
+ font-size:14px;
+ color:#00ffff;
+}
+
+/* ===== MINI FLOAT BEAD ROAD ===== */
+
+#miniRoadBox{
+
+position:fixed;
+
+top:18px;
+
+right:18px;
+
+width:250px;
+
+padding:12px;
+
+background:rgba(5,5,5,.95);
+
+border-radius:14px;
+
+border:1px solid rgba(255,215,0,.35);
+
+box-shadow:
+0 0 25px rgba(0,0,0,.7),
+0 0 12px rgba(255,215,0,.15);
+
+z-index:99999;
+
+backdrop-filter:blur(8px);
+
+}
+
+#miniTitle{
+
+font-size:15px;
+
+font-weight:bold;
+
+color:#ffd700;
+
+text-align:center;
+
+margin-bottom:8px;
+
+}
+
+#miniStats{
+
+font-size:13px;
+
+text-align:center;
+
+margin-bottom:8px;
+
+line-height:1.5;
+
+}
+
+#miniStats span{
+
+font-weight:bold;
+
+}
+
+#miniGrid{
+
+display:grid;
+
+grid-template-columns:repeat(12,18px);
+
+grid-template-rows:repeat(6,18px);
+
+gap:2px;
+
+justify-content:center;
+
+}
+
+.miniCell{
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:10px;
+
+font-weight:bold;
+
+color:white;
+
+}
+
+.miniP{
+
+background:#2980b9;
+
+}
+
+.miniB{
+
+background:#c0392b;
+
+}
+
+.miniT{
+
+background:#27ae60;
+
+font-size:8px;
+
+}
+/* =========================================================
+   👑 333 ORACLE X — DEEP FUSION
+   ========================================================= */
+
+.oracle333{
+ margin:14px auto;
+ max-width:620px;
+ padding:16px;
+ background:
+   linear-gradient(180deg,#050505,#101010);
+ border-radius:16px;
+ border:1px solid rgba(255,215,0,.35);
+ box-shadow:
+   0 0 25px rgba(255,215,0,.12),
+   inset 0 0 0 1px rgba(255,255,255,.04);
+}
+
+.oracle-title{
+ text-align:center;
+ color:#ffd700;
+ font-size:20px;
+ font-weight:900;
+ letter-spacing:1px;
+ margin-bottom:12px;
+ text-shadow:0 0 10px rgba(255,215,0,.4);
+}
+
+.oracle-section{
+ margin-top:12px;
+ padding-top:10px;
+ border-top:1px solid rgba(255,215,0,.15);
+}
+
+.oracle-section-title{
+ color:#ffd700;
+ font-size:13px;
+ font-weight:900;
+ letter-spacing:.8px;
+ margin-bottom:7px;
+}
+
+.oracle-row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ margin:5px 0;
+ font-size:13px;
+}
+/* ===== ORACLE WAIT ===== */
+.oracle-wait{
+    color:#ffd700;
+    font-size:42px;
+    font-weight:900;
+    text-shadow:
+        0 0 18px rgba(255,215,0,.7);
+}
+.oracle-value{
+ font-weight:900;
+}
+
+.oracle-p{
+ color:#4fc3ff;
+}
+
+.oracle-b{
+ color:#ff6666;
+}
+
+.oracle-green{
+ color:#00ff99;
+}
+
+.oracle-yellow{
+ color:#ffd700;
+}
+
+.oracle-cyan{
+ color:#00ffff;
+}
+
+.oracle-bar{
+ width:100%;
+ height:8px;
+ background:#191919;
+ border-radius:10px;
+ overflow:hidden;
+ margin-top:3px;
+}
+
+.oracle-bar-fill{
+ height:100%;
+ border-radius:10px;
+ background:linear-gradient(90deg,#006666,#00ffff);
+ transition:width .35s ease;
+}
+
+.oracle-final{
+ margin-top:14px;
+ padding:14px;
+ text-align:center;
+ border-radius:14px;
+ background:
+   radial-gradient(circle,#092020,#030303);
+ border:1px solid rgba(0,255,255,.25);
+}
+
+.oracle-pick{
+ font-size:42px;
+ font-weight:900;
+ margin:4px 0;
+ text-shadow:0 0 18px currentColor;
+}
+
+.oracle-score{
+ font-size:18px;
+ font-weight:900;
+ color:#ffd700;
+}
+
+.oracle-gate{
+ margin-top:10px;
+ height:12px;
+ background:#181818;
+ border-radius:20px;
+ overflow:hidden;
+}
+
+.oracle-gate-fill{
+ height:100%;
+ background:linear-gradient(90deg,#006666,#00ff99,#ffd700);
+ transition:width .4s ease;
+}
+
+.oracle-lock{
+ margin-top:10px;
+ font-size:16px;
+ font-weight:900;
+ color:#00ff99;
+}
+
+.oracle-invalid{
+ margin-top:7px;
+ font-size:12px;
+ color:#ff8888;
+}
+/* ===== FLOAT CONTROL ===== */
+
+#floatControl{
+
+position:fixed;
+
+top:0;          /* ให้ JavaScript เป็นคนกำหนด */
+
+right:18px;
+
+width:215px;
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:6px;
+
+z-index:99998;
+
+}
+
+.floatBtn{
+
+height:34px;
+
+font-size:12px;
+
+font-weight:700;
+
+border-radius:9px;
+
+padding:0;
+
+letter-spacing:.3px;
+
+}
+
+.floatBtn:hover{
+
+transform:translateY(-2px);
+
+}
+
+.floatPlayer{
+background:linear-gradient(#3498db,#1f4f7a);
+}
+
+.floatBanker{
+background:linear-gradient(#e74c3c,#7f1d1d);
+}
+
+.floatTie{
+background:linear-gradient(#2ecc71,#1e8449);
+}
+
+.floatUndo{
+background:linear-gradient(#9b59b6,#5e3370);
+}
+
+.floatClear{
+
+grid-column:1/3;
+
+background:linear-gradient(#95a5a6,#5f6a6a);
+
+}
+/* =========================================================
+   👑 MINI 333 FINAL FUSION — TOP LEFT
+   จุดวาง: มุมซ้ายบน ห่างขอบ 14px
+   ========================================================= */
+
+#miniFinalFusion{
+    position:fixed;
+    top:14px;
+    left:14px;
+
+    width:285px;
+    max-width:calc(100vw - 28px);
+
+    padding:12px 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(3,10,10,.97),
+            rgba(4,8,8,.97)
+        );
+
+    border:1px solid rgba(0,255,255,.35);
+    border-radius:14px;
+
+    box-shadow:
+        0 0 22px rgba(0,0,0,.75),
+        0 0 14px rgba(0,255,255,.12),
+        inset 0 0 0 1px rgba(255,255,255,.03);
+
+    backdrop-filter:blur(10px);
+
+    z-index:99997;
+
+    color:#eee;
+    font-family:"Segoe UI",Arial,sans-serif;
+
+    text-align:center;
+
+    pointer-events:none;
+}
+
+/* หัวกล่อง */
+.mini-fusion-title{
+    color:#ffd700;
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.6px;
+    margin-bottom:5px;
+}
+
+/* ตัวเลือกหลัก */
+.mini-fusion-label{
+    color:#ffd700;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:1px;
+}
+
+.mini-fusion-pick{
+    font-size:30px;
+    line-height:1.05;
+    font-weight:900;
+    margin:2px 0 5px;
+
+    text-shadow:0 0 14px currentColor;
+}
+
+/* HARD / SOFT */
+.mini-fusion-mode{
+    font-size:14px;
+    font-weight:900;
+    margin-bottom:4px;
+}
+
+/* คะแนน */
+.mini-fusion-score{
+    color:#ffd700;
+    font-size:13px;
+    font-weight:900;
+}
+
+.mini-fusion-confidence{
+    margin-top:2px;
+    font-size:11px;
+    color:#eee;
+}
+
+.mini-fusion-confidence b{
+    color:#00ffff;
+}
+
+/* เส้นแบ่ง */
+.mini-fusion-divider{
+    height:1px;
+    background:rgba(255,215,0,.18);
+    margin:7px 0 6px;
+}
+
+/* ด่านตัดสินใจ */
+.mini-fusion-gate-title{
+    color:#ffd700;
+    font-size:11px;
+    font-weight:900;
+    margin-bottom:4px;
+}
+
+.mini-fusion-gate{
+    width:100%;
+    height:8px;
+
+    background:#191919;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.mini-fusion-gate-fill{
+    height:100%;
+    width:0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #006666,
+            #00ff99,
+            #ffd700
+        );
+
+    border-radius:20px;
+
+    transition:width .35s ease;
+}
+
+/* ล็อกเป้า */
+.mini-fusion-lock{
+    margin-top:6px;
+
+    font-size:12px;
+    font-weight:900;
+}
+
+/* รายละเอียดท้ายกล่อง */
+.mini-fusion-detail{
+    margin-top:4px;
+
+    font-size:9px;
+    line-height:1.35;
+
+    color:#ff8888;
+}
+
+/* มือถือ */
+@media(max-width:600px){
+
+    #miniFinalFusion{
+        top:10px;
+        left:10px;
+
+        width:245px;
+
+        padding:9px 10px;
+    }
+
+    .mini-fusion-pick{
+        font-size:25px;
+    }
+
+    .mini-fusion-title{
+        font-size:11px;
+    }
+
+}
+/* ===== LICENSE EXPIRY — TOP ===== */
+#expireShow{
+    position:fixed;
+    top:5px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:999999;
+
+    font-size:10px;
+    font-weight:600;
+    color:#ffd700;
+    opacity:.85;
+
+    white-space:nowrap;
+    pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== LICENSE EXPIRY TOP ===== -->
+<div id="expireShow"></div>
+
+
+<!-- 🔐 LOGIN -->
+<div id="loginBox" style="
+ max-width:360px;
+ margin:80px auto;
+ padding:20px;
+ background:#111;
+ border-radius:14px;
+ box-shadow:0 0 20px rgba(255,215,0,.3);
+ text-align:center;
+">
+<h2 style="color:#ffd700">🔐 LOGIN</h2>
+
+<input id="user"
+       placeholder="User"
+       style="width:100%;padding:10px;margin:6px 0;border-radius:8px"><br>
+
+<input id="pass"
+       type="password"
+       placeholder="Password"
+       style="width:100%;padding:10px;margin:6px 0;border-radius:8px">
+
+<div style="text-align:left;margin:4px 0 10px;">
+    <label style="cursor:pointer;font-size:14px;color:#ddd;">
+        <input type="checkbox"
+               id="showPass"
+               onchange="togglePassword()">
+        แสดงรหัสผ่าน
+    </label>
+</div>
+
+<button onclick="login()" style="margin-top:10px;padding:10px 20px;border-radius:10px;background:#ffd700;font-weight:bold">
+LOGIN
+</button>
+
+ <div id="err" style="color:red;display:none;margin-top:6px">❌ Login ผิด</div>
+</div>
+
+<div id="app" style="display:none">
+<!-- MINI FLOAT ROAD -->
+<!-- =====================================================
+     👑 MINI 333 FINAL FUSION
+     ตำแหน่ง: TOP LEFT
+     ห่างขอบ: 14px
+     ===================================================== -->
+
+<div id="miniFinalFusion">
+
+    <div class="mini-fusion-title">
+        ━━━━━ 👑 333 FINAL FUSION ━━━━━
+    </div>
+
+    <div class="mini-fusion-label">
+        ตัวเลือกหลัก
+    </div>
+
+    <div
+        id="miniFusionPick"
+        class="mini-fusion-pick"
+        style="color:#4fc3ff;"
+    >
+        รอข้อมูล
+    </div>
+
+    <div
+        id="miniFusionMode"
+        class="mini-fusion-mode"
+        style="color:#ffd700;"
+    >
+        🟡 SOFT BET
+    </div>
+
+    <div class="mini-fusion-score">
+        🔥 คะแนนฟิวชั่น
+        <span id="miniFusionScore">0.0</span>
+    </div>
+
+    <div class="mini-fusion-confidence">
+        ค่าความมั่นใจปรับเทียบ
+        <b id="miniFusionConfidence">0.0%</b>
+    </div>
+
+    <div class="mini-fusion-divider"></div>
+
+    <div class="mini-fusion-gate-title">
+        🛡️ ด่านตัดสินใจ
+    </div>
+
+    <div class="mini-fusion-gate">
+        <div
+            id="miniFusionGate"
+            class="mini-fusion-gate-fill"
+            style="width:0%;"
+        ></div>
+    </div>
+
+    <div
+        id="miniFusionLock"
+        class="mini-fusion-lock"
+        style="color:#ffd700;"
+    >
+        🟡 333 SOFT BET — แทงตามสัญญาณ
+    </div>
+
+    <div
+        id="miniFusionDetail"
+        class="mini-fusion-detail"
+    >
+        สัญญาณยังไม่ถึงระดับ HARD
+        แต่ระบบยังแทงทุกตา
+    </div>
+
+</div>
+<div id="miniRoadBox">
+
+<div id="miniTitle">
+
+Mini Bead Road
+
+</div>
+
+<div id="miniStats">
+
+P :
+<span id="miniP">0</span>
+
+&nbsp;&nbsp;
+
+B :
+<span id="miniB">0</span>
+
+&nbsp;&nbsp;
+
+T :
+<span id="miniT">0</span>
+
+<br>
+
+TOTAL :
+<span id="miniTotal">0</span>
+
+</div>
+
+<div id="miniGrid"></div>
+
+</div>
+<!-- FLOAT CONTROL -->
+
+<div id="floatControl">
+
+<button class="floatBtn floatPlayer"
+onclick="addResult('P')">
+PLAYER
+</button>
+
+<button class="floatBtn floatBanker"
+onclick="addResult('B')">
+BANKER
+</button>
+
+<button class="floatBtn floatTie"
+onclick="addResult('T')">
+TIE
+</button>
+
+<button class="floatBtn floatUndo"
+onclick="undo()">
+UNDO
+</button>
+
+<button class="floatBtn floatClear"
+onclick="clearAll()">
+CLEAR
+</button>
+
+</div>
+<div class="container">
+<h1 style="
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:14px;
+">
+
+ <img src="robotcouth3.png"
+      style="
+        height:140px;
+        width:auto;
+        filter:
+          drop-shadow(0 0 10px rgba(0,255,255,.6))
+          drop-shadow(0 0 20px rgba(255,215,0,.4));
+      ">
+
+ Genuis Baccarat 24 สาย วิศวะฯ เพิ่ม DQN Ai จดจำเค้าไพ่ 4 ตาย้อนหลังได้
+
+</h1>
+
+<div id="dqnBox" style="
+ margin:12px auto 18px;
+ padding:14px;
+ max-width:620px;
+ background:linear-gradient(180deg,#001a1a,#003333);
+ border-radius:16px;
+ box-shadow:0 0 18px rgba(0,255,255,.25),
+ inset 0 0 0 1px rgba(0,255,255,.35);
+ text-align:center;
+">
+
+ <div style="font-size:18px;font-weight:bold;color:#00ffff">
+  🤖 DQN MODE
+ </div>
+
+ <div id="dqnStatus" style="margin-top:6px;font-size:14px">
+  สถานะ: OFF
+ </div>
+
+ <div id="dqnInfo" style="margin-top:8px;font-size:15px">
+  รอข้อมูล...
+ </div>
+
+ <button onclick="toggleDQN()" style="
+  margin-top:10px;
+  padding:8px 16px;
+  border-radius:10px;
+  border:none;
+  font-weight:bold;
+  background:linear-gradient(#00cccc,#006666);
+  color:#000;">
+  เปิด / ปิด DQN
+ </button>
+</div>
+
+<!-- ===== PATTERN MEMORY AI ===== -->
+
+<div id="memoryBox" style="
+ margin:12px auto 18px;
+ padding:14px;
+ max-width:620px;
+ background:linear-gradient(180deg,#1a1400,#332700);
+ border-radius:16px;
+ box-shadow:0 0 18px rgba(255,215,0,.25),
+ inset 0 0 0 1px rgba(255,215,0,.35);
+ text-align:center;
+">
+
+<div style="
+font-size:18px;
+font-weight:bold;
+color:#ffd700">
+ PATTERN MEMORY AI
+</div>
+
+<div id="memoryInfo"
+style="
+margin-top:8px;
+font-size:15px">
+
+รอข้อมูล...
+
+</div>
+
+</div>
+
+<div class="controls">
+<button class="player" onclick="addResult('P')">PLAYER</button>
+<button class="banker" onclick="addResult('B')">BANKER</button>
+<button class="tie" onclick="addResult('T')">TIE</button>
+<button class="undo" onclick="undo()">UNDO</button>
+<button class="clear" onclick="clearAll()">CLEAR</button>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="summary">
+  <div id="summary">📊 รอข้อมูล...</div>
+</div>
+<!-- =====================================================
+     👑 333 ORACLE X — DEEP FUSION
+     ===================================================== -->
+
+<div id="oracle333" class="oracle333">
+
+  <div class="oracle-title">
+     333 ORACLE X — DEEP FUSION
+  </div>
+
+  <div id="oracle333Content">
+     รอข้อมูลสำหรับ 333 Oracle...
+  </div>
+
+</div>
+
+<div class="road-wrapper">
+ <div class="road">
+  <h3>Bead Road</h3>
+  <div class="grid" id="bead"></div>
+ </div>
+ <div class="road">
+  <h3>Big Road</h3>
+  <div class="grid" id="bigroad"></div>
+ </div>
+</div>
+
+<div class="analysis-grid" id="analysisGrid"></div>
+</div>
+
+<script>
+
+// ===== 🔒 EXPIRE SYSTEM =====
+const EXPIRE_DATE = new Date(2026, 8, 08, 0, 0, 0);
+// 8 ก.ย. 2569 (ค.ศ.2026)
+
+if(new Date() > EXPIRE_DATE){
+  document.body.innerHTML = `
+    <div style="
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background:#000;
+      color:#ffd700;
+      font-size:10px;
+      font-weight:bold;
+      text-align:center;">
+      ❌ โปรแกรมหมดอายุแล้ว<br>
+      หมดอายุวันที่: ${EXPIRE_DATE.toLocaleDateString('th-TH')}
+    </div>
+  `;
+  throw new Error("Program Expired");
+}
+
+// ✅ แสดงวันหมดอายุ
+document.addEventListener("DOMContentLoaded", ()=>{
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const d = EXPIRE_DATE.toLocaleDateString('th-TH', options);
+
+  const year = d.split(" ")[2];
+  const formatted = d.replace(year, "พ.ศ. " + year);
+
+  const el = document.getElementById("expireShow");
+  if(el){
+    el.innerHTML = "⏳ วันหมดอายุ: " + formatted;
+  }
+});
+
+function togglePassword(){
+
+    const pass = document.getElementById("pass");
+    const chk = document.getElementById("showPass");
+
+    if(chk.checked){
+        pass.type = "text";
+    }else{
+        pass.type = "password";
+    }
+
+}
+
+/* ===== LOGIN (API VERSION) ===== */
+async function login(){
+
+  const userInput = document.getElementById("user");
+  const passInput = document.getElementById("pass");
+
+  const loginBoxEl = document.getElementById("loginBox");
+  const appEl = document.getElementById("app");
+  const loginErrEl = document.getElementById("err");
+
+  loginErrEl.style.display="block";
+  loginErrEl.style.color="#ffd700";
+  loginErrEl.textContent="กำลังตรวจสอบ...";
+
+  try{
+
+    const res = await fetch(
+      "https://morning-block-55bb.havanalanna.workers.dev/?user="
+      + encodeURIComponent(userInput.value)
+      + "&pass=" + encodeURIComponent(passInput.value),
+      {cache:"no-store"}
+    );
+
+    const data = await res.json();
+
+    if(data.status==="ok"){
+
+      loginErrEl.style.display="none";
+
+      loginBoxEl.style.display="none";
+      appEl.style.display="block";
+
+      setTimeout(layoutFloatControl,50);
+      setTimeout(layoutFloatControl,300);
+
+      render();
+
+      const user=userInput.value;
+      const pass=passInput.value;
+
+      /* 🔒 ตรวจ License ทุก 30 วิ */
+      setInterval(async ()=>{
+
+        try{
+
+          const r = await fetch(
+            "https://morning-block-55bb.havanalanna.workers.dev/?user="
+            + encodeURIComponent(user)
+            + "&pass=" + encodeURIComponent(pass),
+            {cache:"no-store"}
+          );
+
+          const j = await r.json();
+
+          if(j.status!=="ok"){
+            alert("⛔ License ถูกปิดใช้งาน");
+            location.reload();
+          }
+
+        }catch(e){
+          console.log("License check error");
+        }
+
+      },30000);
+
+    }else{
+
+      loginErrEl.style.color="red";
+      loginErrEl.textContent="❌ User หรือ Password ไม่ถูกต้อง";
+
+    }
+
+  }catch(e){
+
+    loginErrEl.style.color="red";
+    loginErrEl.textContent="❌ ไม่สามารถเชื่อมต่อ License Server";
+
+  }
+
+}
+
+let history=[]
+let STRATEGY_COUNT=24
+let last=Array(STRATEGY_COUNT).fill(null)
+let dna=Array.from({length:STRATEGY_COUNT},()=>[])
+
+// ===== DQN ENGINE =====
+let dqnMode = false
+let Q = {}
+let epsilon = 0.1
+let alpha = 0.2
+let gamma = 0.9
+let dqnLastState = null
+let dqnLastAction = null
+
+// ===== ADVANCED MEMORY AI =====
+let patternMemory = {}
+// =====================================================
+// 👑 333 ORACLE X — ADAPTIVE META LEARNING
+// =====================================================
+
+let oracleStats = {
+    DNA:     {win:0, lose:0},
+    VLMM:    {win:0, lose:0},
+    MARKOV:  {win:0, lose:0},
+    DQN:     {win:0, lose:0},
+    MOMENTUM:{win:0, lose:0},
+    BLOCK333:{win:0, lose:0}
+};
+
+let oracleLastForecast = null;
+
+const ORACLE_WINDOW = 60;
+// =====================================================
+// 👑 REGIME ADAPTIVE MEMORY
+// แยกสถิติของแต่ละ AI ตามสภาวะตลาด
+// =====================================================
+
+const ORACLE_REGIMES = [
+    "TREND",
+    "PING-PONG",
+    "BLOCK",
+    "CHAOS"
+];
+
+const ORACLE_ENGINES = [
+    "DNA",
+    "VLMM",
+    "MARKOV",
+    "DQN",
+    "MOMENTUM",
+    "BLOCK333"
+];
+
+function createRegimeStats(){
+
+    const obj = {};
+
+    ORACLE_REGIMES.forEach(regime => {
+
+        obj[regime] = {
+            win: 0,
+            lose: 0
+        };
+
+    });
+
+    return obj;
+}
+
+
+// สถิติแยก:
+//
+// DNA
+// ├── TREND
+// ├── PING-PONG
+// ├── BLOCK
+// └── CHAOS
+//
+// VLMM
+// ├── TREND
+// ├── PING-PONG
+// ├── BLOCK
+// └── CHAOS
+//
+// ...จนครบทุก Engine
+
+let oracleRegimeStats = {};
+
+ORACLE_ENGINES.forEach(name => {
+
+    oracleRegimeStats[name] =
+        createRegimeStats();
+
+});
+
+
+// =====================================================
+// REGIME HIT RATE
+// =====================================================
+
+function oracleRegimeHitRate(
+    name,
+    regime
+){
+
+    const x =
+        oracleRegimeStats[name]?.[regime];
+
+    /*
+      =============================================
+      ไม่มีข้อมูลเลย
+      ใช้ 50% เป็น Bayesian Prior
+      =============================================
+    */
+
+    if(!x){
+
+        return 50;
+
+    }
+
+    const total =
+        x.win + x.lose;
+
+
+    /*
+      =============================================
+      Bayesian smoothing
+      Prior = 2 WIN / 2 LOSE
+      =============================================
+    */
+
+    const smoothWin =
+        x.win + 2;
+
+    const smoothTotal =
+        total + 4;
+
+
+    return (
+        smoothWin /
+        smoothTotal
+    ) * 100;
+
+}
+
+// =====================================================
+// REGIME SAMPLE COUNT
+// =====================================================
+
+function oracleRegimeSample(
+    name,
+    regime
+){
+
+    const x =
+        oracleRegimeStats[name]?.[regime];
+
+    if(!x) return 0;
+
+    return x.win + x.lose;
+
+}
+
+function oracleHitRate(name){
+
+    const x = oracleStats[name];
+
+    if(!x) return 50;
+
+    const total = x.win + x.lose;
+
+    if(total < 3) return 50;
+
+    return (
+        x.win / total
+    ) * 100;
+}
+
+function oracleReliability(name){
+
+    const x = oracleStats[name];
+
+    if(!x) return 0.50;
+
+    const total = x.win + x.lose;
+
+    /*
+      ยังมีข้อมูลน้อย
+      ไม่ให้คะแนนแกว่งแรง
+    */
+    if(total < 3){
+
+        return 0.50;
+
+    }
+
+    /*
+      Bayesian smoothing
+      ป้องกัน 1/1 = 100%
+    */
+
+    const smoothWin = x.win + 2;
+    const smoothTotal = total + 4;
+
+    return smoothWin / smoothTotal;
+}
+// =====================================================
+// 👑 REGIME ADAPTIVE META WEIGHT
+// =====================================================
+
+function oracleAdaptiveWeights(regimeName){
+
+    const names = [
+        "DNA",
+        "VLMM",
+        "MARKOV",
+        "DQN",
+        "MOMENTUM",
+        "BLOCK333"
+    ];
+
+
+    // =================================================
+    // BASE PROFILE ตามสภาวะตลาด
+    // =================================================
+
+    const profiles = {
+
+        // =============================================
+        // TREND
+        // =============================================
+        TREND: {
+
+            DNA:      0.22,
+            VLMM:     0.20,
+            MARKOV:   0.13,
+            DQN:      0.10,
+            MOMENTUM: 0.15,
+            BLOCK333: 0.20
+
+        },
+
+
+        // =============================================
+        // 🔥 PING-PONG
+        // ตามค่าที่คุณต้องการ
+        // =============================================
+        "PING-PONG": {
+
+            VLMM:     0.30,
+            DNA:      0.15,
+            MARKOV:   0.20,
+            MOMENTUM: 0.15,
+            BLOCK333: 0.15,
+            DQN:      0.05
+
+        },
+
+
+        // =============================================
+        // BLOCK
+        // =============================================
+        BLOCK: {
+
+            DNA:      0.18,
+            VLMM:     0.18,
+            MARKOV:   0.22,
+            DQN:      0.08,
+            MOMENTUM: 0.12,
+            BLOCK333: 0.22
+
+        },
+
+
+        // =============================================
+        // CHAOS
+        // =============================================
+        CHAOS: {
+
+            DNA:      0.15,
+            VLMM:     0.18,
+            MARKOV:   0.22,
+            DQN:      0.05,
+            MOMENTUM: 0.15,
+            BLOCK333: 0.25
+
+        }
+
+    };
+
+
+    // ถ้า Regime ไม่ตรง
+    // ใช้ BLOCK เป็น fallback
+    const profile =
+        profiles[regimeName] ||
+        profiles.BLOCK;
+
+
+    const w = {};
+
+
+    names.forEach(name => {
+
+        // ---------------------------------------------
+        // ค่าเริ่มต้นของ Regime
+        // ---------------------------------------------
+
+        let base =
+            profile[name] || 0;
+
+
+        // ---------------------------------------------
+        // DQN OFF
+        // ---------------------------------------------
+
+        if(
+            name === "DQN" &&
+            !dqnMode
+        ){
+
+            w[name] = 0;
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // ดูผลงานเฉพาะ Regime ปัจจุบัน
+        // ---------------------------------------------
+
+        const rate =
+            oracleRegimeHitRate(
+                name,
+                regimeName
+            );
+
+
+        // ---------------------------------------------
+        // ยังไม่มีข้อมูลพอ
+        //
+        // ใช้ Base Profile ไปก่อน
+        // ไม่ให้ AI ตัวใดได้เปรียบจากข้อมูลน้อย
+        // ---------------------------------------------
+
+        if(rate === null){
+
+            w[name] = base;
+
+            return;
+
+        }
+
+
+        // ---------------------------------------------
+        // Adaptive factor
+        //
+        // 50% = กลาง
+        // >50 = เพิ่มน้ำหนัก
+        // <50 = ลดน้ำหนัก
+        //
+        // จำกัดไม่ให้เหวี่ยงเกินไป
+        // ---------------------------------------------
+
+        let factor =
+            0.70 +
+            (
+                rate / 100
+            ) * 0.60;
+
+
+        factor =
+            Math.max(
+                0.70,
+                Math.min(
+                    1.30,
+                    factor
+                )
+            );
+
+
+        w[name] =
+            base * factor;
+
+    });
+
+
+    // =================================================
+    // NORMALIZE
+    // =================================================
+
+    const total =
+        Object.values(w)
+        .reduce(
+            (a,b)=>a+b,
+            0
+        );
+
+
+    if(!total)
+        return profiles.BLOCK;
+
+
+    Object.keys(w).forEach(k => {
+
+        w[k] /= total;
+
+    });
+
+
+    return w;
+
+}
+function oracleLearn(
+    name,
+    correct,
+    regimeName
+){
+
+    // =============================================
+    // GLOBAL STATS
+    // =============================================
+
+    if(!oracleStats[name]){
+
+        oracleStats[name] = {
+            win:0,
+            lose:0
+        };
+
+    }
+
+
+    if(correct)
+        oracleStats[name].win++;
+    else
+        oracleStats[name].lose++;
+
+
+    // =============================================
+    // REGIME STATS
+    // =============================================
+
+    if(
+        regimeName &&
+        oracleRegimeStats[name] &&
+        oracleRegimeStats[name][regimeName]
+    ){
+
+        if(correct){
+
+            oracleRegimeStats[name][regimeName]
+                .win++;
+
+        }else{
+
+            oracleRegimeStats[name][regimeName]
+                .lose++;
+
+        }
+
+    }
+
+
+    // =============================================
+    // จำกัด GLOBAL MEMORY
+    // =============================================
+
+    const total =
+        oracleStats[name].win +
+        oracleStats[name].lose;
+
+
+    if(total > ORACLE_WINDOW){
+
+        const ratio =
+            ORACLE_WINDOW /
+            total;
+
+
+        oracleStats[name].win =
+            Math.round(
+                oracleStats[name].win *
+                ratio
+            );
+
+
+        oracleStats[name].lose =
+            Math.round(
+                oracleStats[name].lose *
+                ratio
+            );
+
+    }
+
+}
+
+function oracleResolveForecast(actual){
+
+    if(!oracleLastForecast) return;
+
+    const f = oracleLastForecast;
+
+    /*
+      T ไม่เอามาตัดสิน accuracy
+    */
+
+    if(actual === 'T') return;
+
+ Object.keys(f.engines).forEach(name=>{
+
+    const pick =
+        f.engines[name];
+
+    if(!pick) return;
+
+
+    oracleLearn(
+        name,
+        pick === actual,
+        f.regime
+    );
+
+});
+
+    oracleLastForecast = null;
+
+}
+
+const VLMM_MIN = 2
+const VLMM_MAX = 8
+const VLMM_MIN_COUNT = 3
+// ===== Weighted VLMM =====
+const VLMM_WEIGHT = {
+    8:0.25,
+    7:0.20,
+    6:0.18,
+    5:0.15,
+    4:0.10,
+    3:0.07,
+    2:0.05
+}
+// ===== DQN STATS =====
+let dqnHistory = []
+let dqnWin = 0
+let dqnLose = 0
+// ===== MARKOV MEMORY =====
+let markovMemory = {};
+
+function getState(s){
+ if(s.length < 8) return null
+ return s.slice(-8).join('')
+}
+
+
+function getQ(state){
+ if(!Q[state]){
+  Q[state] = {P:0, B:0}
+ }
+ return Q[state]
+}
+
+// ===== ADVANCED MEMORY FUNCTIONS =====
+function getLongPattern(s){
+  if(s.length < MEMORY_DEPTH) return null
+  return s.slice(-MEMORY_DEPTH).join('')
+}
+
+function updatePatternMemory(state,result){
+
+    if(!patternMemory[state]){
+
+        patternMemory[state]={
+            P:0,
+            B:0,
+            last:0
+        };
+
+    }
+
+    patternMemory[state][result]++;
+    patternMemory[state].last = Date.now();
+
+}
+
+function getPatternPrediction(state){
+  if(!patternMemory[state]) return null
+
+  let data = patternMemory[state]
+  return data.P >= data.B ? 'P' : 'B'
+}
+function getVLMMPrediction(history){
+
+    let result=[];
+
+    for(let depth=VLMM_MAX;depth>=VLMM_MIN;depth--){
+
+        if(history.length<depth) continue;
+
+        let state=
+            history.slice(-depth).join('');
+
+        let mem=patternMemory[state];
+
+        if(!mem) continue;
+
+        let total=mem.P+mem.B;
+
+        if(total<VLMM_MIN_COUNT)
+            continue;
+
+        let pRate=mem.P/total;
+        let bRate=mem.B/total;
+
+        result.push({
+
+            depth,
+            state,
+            total,
+            pick:pRate>=bRate?'P':'B',
+            winRate:Math.max(pRate,bRate)
+
+        });
+
+    }
+
+    return result;
+
+}
+function isPingPong(s){
+
+    if(s.length<6) return false;
+
+    for(let i=s.length-5;i<s.length-1;i++){
+
+        if(s[i]==s[i+1]){
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+function updateMarkov(prev,next){
+
+    if(!markovMemory[prev]){
+
+        markovMemory[prev]={
+            P:0,
+            B:0
+        };
+
+    }
+
+    markovMemory[prev][next]++;
+
+}
+
+function getMarkovScore(state,pick){
+
+    let mem = markovMemory[state];
+
+    if(!mem)
+        return 0;
+
+    let total = mem.P + mem.B;
+
+    if(total < 5)
+        return 0;
+
+    let rate = mem[pick] / total;
+
+    let sample = Math.log(total+1);
+
+    let confidence =
+        Math.max(
+            0,
+            (rate-0.5)*2
+        );
+
+    return confidence * sample * 18;
+
+}
+function getMarkovDecision(state){
+
+    let mem = markovMemory[state];
+
+    if(!mem)
+        return null;
+
+    let total = mem.P + mem.B;
+
+    if(total < 5)
+        return null;
+
+    let pRate = mem.P / total;
+    let bRate = mem.B / total;
+
+    return{
+
+        pick : pRate >= bRate ? "P":"B",
+
+        confidence :
+            Math.round(
+                Math.max(pRate,bRate)*100
+            ),
+
+        pRate,
+        bRate
+
+    };
+
+}
+function scoreVLMM(item){
+
+    let confidence = item.winRate;
+
+    let sample = Math.log(item.total + 1);
+
+    let depthBonus = item.depth * 0.06;
+
+    let recency = 1;
+
+    let mem = patternMemory[item.state];
+
+    if(mem && mem.last){
+
+        let age = (Date.now() - mem.last) / 1000;
+
+        recency = Math.max(0.40, 1 - age / 300);
+
+    }
+
+    // ===== Markov Bonus =====
+    let markovBonus =
+        getMarkovScore(
+            item.state.slice(-2),
+            item.pick
+        );
+
+    return (
+        confidence
+        * sample
+        * (1 + depthBonus)
+        * recency
+    ) + markovBonus;
+
+}
+
+function getBestVLMM(history){
+
+    let list=getVLMMPrediction(history);
+
+    if(!list.length)
+        return null;
+
+    list.sort((a,b)=>
+
+        scoreVLMM(b)-scoreVLMM(a)
+
+    );
+
+    return list[0];
+
+}
+function getWeightedVLMM(history){
+
+    const list = getVLMMPrediction(history);
+
+    if(!list.length) return null;
+
+    let scoreP = 0;
+    let scoreB = 0;
+list.forEach(item=>{
+
+    let score = scoreVLMM(item);
+
+    if(item.pick=="P")
+        scoreP += score;
+
+    else
+        scoreB += score;
+
+});
+
+    const total = scoreP + scoreB;
+
+    return{
+
+        pick :
+            scoreP>=scoreB?"P":"B",
+
+        scoreP,
+
+        scoreB,
+
+      confidence:
+Math.min(
+    99,
+    Math.round(
+        Math.max(scoreP,scoreB)
+        /total*100
+    )
+),
+
+        detail:list
+
+    };
+
+}
+function chooseAction(state){
+
+    if(!state)
+        return null;
+
+    let q = getQ(state);
+
+    /*
+      =====================================================
+      🔥 DQN BOOTSTRAP
+      ถ้า State นี้ยังไม่เคยเรียน
+      ต้องให้ DQN ทดลองก่อน
+      ไม่เช่นนั้นจะเกิดปัญหา:
+      
+      Q(P)=0
+      Q(B)=0
+      → return null
+      → ไม่มี prediction
+      → ไม่มี reward
+      → Q ไม่เคยเปลี่ยน
+      → DQN -- ตลอดไป
+      =====================================================
+    */
+
+    if(
+        q.P === 0 &&
+        q.B === 0
+    ){
+
+        return Math.random() < 0.5
+            ? 'P'
+            : 'B';
+
+    }
+
+    /*
+      =====================================================
+      EPSILON EXPLORATION
+      =====================================================
+    */
+
+    if(Math.random() < epsilon){
+
+        return Math.random() < 0.5
+            ? 'P'
+            : 'B';
+
+    }
+
+    /*
+      =====================================================
+      ถ้า Q เท่ากัน
+      ใช้ exploration แทนการคืน null
+      =====================================================
+    */
+
+    if(q.P === q.B){
+
+        return Math.random() < 0.5
+            ? 'P'
+            : 'B';
+
+    }
+
+    /*
+      =====================================================
+      GREEDY ACTION
+      =====================================================
+    */
+
+    return q.P > q.B
+        ? 'P'
+        : 'B';
+}
+
+function toggleDQN(){
+ dqnMode = !dqnMode
+
+ document.getElementById("dqnStatus").innerHTML =
+  "สถานะ: " + (dqnMode ? "<b style='color:#00ff99'>ON</b>" : "<b style='color:#ff4444'>OFF</b>")
+
+ if(!dqnMode){
+   const box = document.getElementById("dqnInfo")
+   if(box) box.innerHTML = "รอข้อมูล..."
+ }
+}
+
+
+
+function addResult(r){
+
+    if(r !== 'T'){
+        oracleResolveForecast(r);
+    }
+
+
+// ===== VLMM LEARN =====
+
+let cleanHistory=history.filter(x=>x!='T')
+
+if(r!='T'){
+
+    for(let depth=VLMM_MIN;depth<=VLMM_MAX;depth++){
+
+        if(cleanHistory.length<depth)
+            continue;
+
+        let state=
+            cleanHistory
+            .slice(-depth)
+            .join('');
+
+updatePatternMemory(state,r);
+
+// ===== Markov Learn =====
+if(cleanHistory.length>=2){
+
+    let prev=
+        cleanHistory
+        .slice(-2)
+        .join("");
+
+    updateMarkov(prev,r);
+
+}
+
+}
+
+}
+ history.push(r)
+
+ // ===== 24 STRATEGY LEARN =====
+ let s = history.filter(x => x !== 'T')
+
+ if (s.length > 1 && r !== 'T') {
+   strategyDefs.forEach((def,i)=>{
+     if(last[i] !== null){
+       dna[i].push(last[i] === r ? '✅' : '❌')
+
+       // เก็บไม่เกิน 50 ช่อง
+       if(dna[i].length > 50) dna[i].shift()
+     }
+   })
+ }
+
+// ===== DQN LEARN =====
+if(dqnMode && dqnLastState && r !== 'T'){
+
+   let reward = (r === dqnLastAction) ? 1 : -1
+   let q = getQ(dqnLastState)
+
+   let cleanHistory = history.filter(x => x !== 'T')
+   let nextState = getState(cleanHistory)
+   let nextQ = nextState ? getQ(nextState) : {P:0,B:0}
+   let maxNext = Math.max(nextQ.P, nextQ.B)
+
+   q[dqnLastAction] += alpha * (
+     reward + gamma * maxNext - q[dqnLastAction]
+   )
+
+   if(reward === 1){
+     dqnHistory.push("✅")
+     dqnWin++
+   }else{
+     dqnHistory.push("❌")
+     dqnLose++
+   }
+
+   if(dqnHistory.length > 50) dqnHistory.shift()
+}
+
+
+// ✅ render ต้องอยู่นอก if
+render()
+}
+
+function undo(){
+
+    if(history.length === 0) return;
+
+    // ลบล่าสุด
+    let removed = history.pop();
+
+    // ลบผล DQN เฉพาะตอน Undo P/B
+    if(removed !== "T" && dqnHistory.length){
+
+        let lastResult = dqnHistory.pop();
+
+        if(lastResult === "✅"){
+            dqnWin--;
+        }else{
+            dqnLose--;
+        }
+
+        if(dqnWin < 0) dqnWin = 0;
+        if(dqnLose < 0) dqnLose = 0;
+    }
+
+    // รีเซ็ตเฉพาะการคำนวณ
+    dna = Array.from({length:STRATEGY_COUNT},()=>[]);
+    last = Array(STRATEGY_COUNT).fill(null);
+
+    // รีคำนวณ DNA ใหม่จาก history ที่เหลือ
+    let clean = history.filter(x => x !== 'T');
+
+    for(let n=0; n<clean.length; n++){
+
+        let partial = clean.slice(0,n+1);
+
+        if(partial.length>1){
+
+            strategyDefs.forEach((def,i)=>{
+
+                let prev = partial.slice(0,-1);
+
+                let pick = def[2](prev);
+
+                last[i] = pick;
+
+                let actual = partial[partial.length-1];
+
+                dna[i].push(
+                    pick===actual ? '✅' : '❌'
+                );
+
+                if(dna[i].length>50){
+                    dna[i].shift();
+                }
+
+            });
+
+        }
+
+    }
+
+    // คำนวณตัวแทงปัจจุบันใหม่
+    let s = history.filter(x=>x!=='T');
+
+    if(s.length){
+
+        strategyDefs.forEach((def,i)=>{
+            last[i] = def[2](s);
+        });
+
+    }
+
+    // ไม่ล้าง AI Memory
+    // ไม่ล้าง Q
+    // ไม่ล้าง patternMemory
+    // ไม่ล้าง dqnHistory
+
+
+    // ==========================================
+    // 🔥 UNDO แล้วรีเซ็ตกล่องซ้ายบน
+    // MINI 333 FINAL FUSION
+    // ==========================================
+
+    const miniPick =
+        document.getElementById("miniFusionPick");
+
+    const miniMode =
+        document.getElementById("miniFusionMode");
+
+    const miniScore =
+        document.getElementById("miniFusionScore");
+
+    const miniConfidence =
+        document.getElementById("miniFusionConfidence");
+
+    const miniGate =
+        document.getElementById("miniFusionGate");
+
+    const miniLock =
+        document.getElementById("miniFusionLock");
+
+    const miniDetail =
+        document.getElementById("miniFusionDetail");
+
+
+    // ถ้า Undo จนข้อมูลไม่พอ
+    const cleanAfterUndo =
+        history.filter(x => x !== "T");
+
+
+    if(cleanAfterUndo.length < 3){
+
+        if(miniPick){
+            miniPick.textContent = "รอข้อมูล";
+            miniPick.style.color = "#4fc3ff";
+        }
+
+        if(miniMode){
+            miniMode.innerHTML = "🟡 SOFT BET";
+            miniMode.style.color = "#ffd700";
+        }
+
+        if(miniScore){
+            miniScore.textContent = "0.0";
+        }
+
+        if(miniConfidence){
+            miniConfidence.textContent = "0.0%";
+        }
+
+        if(miniGate){
+            miniGate.style.width = "0%";
+        }
+
+        if(miniLock){
+            miniLock.innerHTML = "🟡 รอข้อมูลใหม่";
+            miniLock.style.color = "#ffd700";
+        }
+
+        if(miniDetail){
+            miniDetail.innerHTML =
+                "กรุณาใส่ข้อมูลใหม่เพื่อเริ่มวิเคราะห์";
+        }
+
+    }
+
+
+    // ==========================================
+    // ⬇️ render ต้องอยู่หลังสุด
+    // ==========================================
+
+    render();
+
+} // ← ปิด undo() ตรงนี้
+
+
+
+function clearAll(){ 
+
+    history=[] 
+
+    dna=Array.from({length:STRATEGY_COUNT},()=>[]) 
+
+    last=Array(STRATEGY_COUNT).fill(null) 
+
+
+    // ===== 👑 RESET CURRENT 333 ORACLE FORECAST =====
+
+    oracleLastForecast = null;
+
+
+    // ===== 👑 RESET 333 ORACLE X ===== 
+
+    const oracleBox = 
+        document.getElementById("oracle333Content"); 
+
+    if(oracleBox){ 
+
+        oracleBox.innerHTML = 
+            "🧠 รอข้อมูลสำหรับ 333 Oracle..."; 
+
+    }
+
+
+    // ===== รีเซ็ต DQN =====
+
+    Q={}
+
+    dqnLastState=null
+
+    dqnLastAction=null
+
+
+    // ===== รีเซ็ตสถิติ DQN =====
+
+    dqnHistory=[]
+
+    dqnWin=0
+
+    dqnLose=0
+
+
+    // ===== กันหน้าจอ DQN ค้าง =====
+
+    const box =
+        document.getElementById("dqnInfo");
+
+    if(box){
+
+        box.innerHTML = "รอข้อมูล...";
+
+    }
+
+
+    // ===== ล้างเฉพาะหน้าจอ Pattern Memory =====
+
+    const memBox =
+        document.getElementById("memoryInfo");
+
+    if(memBox){
+
+        memBox.innerHTML = "รอข้อมูล...";
+
+    }
+
+
+    // ==========================================
+    // 🔥 CLEAR กล่องซ้ายบน 333 FINAL FUSION
+    // ==========================================
+
+    const miniPick =
+        document.getElementById("miniFusionPick");
+
+    const miniMode =
+        document.getElementById("miniFusionMode");
+
+    const miniScore =
+        document.getElementById("miniFusionScore");
+
+    const miniConfidence =
+        document.getElementById("miniFusionConfidence");
+
+    const miniGate =
+        document.getElementById("miniFusionGate");
+
+    const miniLock =
+        document.getElementById("miniFusionLock");
+
+    const miniDetail =
+        document.getElementById("miniFusionDetail");
+
+
+    if(miniPick){
+        miniPick.textContent = "รอข้อมูล";
+        miniPick.style.color = "#4fc3ff";
+    }
+
+    if(miniMode){
+        miniMode.innerHTML = "🟡 SOFT BET";
+        miniMode.style.color = "#ffd700";
+    }
+
+    if(miniScore){
+        miniScore.textContent = "0.0";
+    }
+
+    if(miniConfidence){
+        miniConfidence.textContent = "0.0%";
+    }
+
+    if(miniGate){
+        miniGate.style.width = "0%";
+    }
+
+    if(miniLock){
+        miniLock.innerHTML = "🟡 รอข้อมูลใหม่";
+        miniLock.style.color = "#ffd700";
+    }
+
+    if(miniDetail){
+        miniDetail.innerHTML =
+            "กรุณาใส่ข้อมูลใหม่เพื่อเริ่มวิเคราะห์";
+    }
+
+
+    // ==========================================
+    // ⬇️ ของเดิม ต้องอยู่หลังโค้ดด้านบน
+    // ==========================================
+
+    render();
+
+}
+
+const acc=a=>a.length?Math.round(a.filter(x=>x==='✅').length/a.length*100):0
+const lastOf=s=>s[s.length-1]
+const opp=s=>s==='B'?'P':'B'
+const cnt=(s,x)=>s.filter(v=>v===x).length
+
+function render(){
+
+    stats.textContent =
+        `B:${cnt(history,'B')} | P:${cnt(history,'P')} | T:${cnt(history,'T')}`;
+
+    renderBead();
+
+    renderBig();
+
+    renderMiniRoad();
+
+    layoutFloatControl();
+
+    analyze();
+
+}
+function renderBead(){
+ bead.innerHTML=""
+ history.forEach((r,i)=>{
+  let d=document.createElement("div")
+  d.className="cell "+r
+  d.textContent=r
+  d.style.gridColumn=Math.floor(i/6)+1
+  d.style.gridRow=i%6+1
+  bead.appendChild(d)
+ })
+}
+
+function renderBig(){
+ bigroad.innerHTML=""
+ let col=1,row=1,lastR=null,used={}
+ history.forEach(r=>{
+  if(r==='T')return
+  if(lastR===null){col=1;row=1}
+  else if(r===lastR){
+   if(row<6 && !used[col+','+(row+1)])row++
+   else col++
+  }else{col++;row=1}
+  used[col+','+row]=1
+  let d=document.createElement("div")
+  d.className="cell "+r
+  d.textContent=r
+  d.style.gridColumn=col
+  d.style.gridRow=row
+  bigroad.appendChild(d)
+  lastR=r
+ })
+}
+
+const strategyDefs=[
+ ["Majority","ฝั่งรวม",(s)=>cnt(s,'B')>=cnt(s,'P')?'B':'P'],
+ ["StreakCut","ตัดยาว",(s)=>s.slice(-3).every(v=>v===lastOf(s))?opp(lastOf(s)):lastOf(s)],
+ ["FlipBias","ดูการกลับ",(s)=>cnt(s.slice(-5),'B')%2?'P':'B'],
+ ["Window6","หน้าต่าง6",(s)=>cnt(s.slice(-6),'B')>=4?'B':'P'],
+ ["Window8","หน้าต่าง8",(s)=>cnt(s.slice(-8),'P')>=5?'P':'B'],
+ ["Echo","สะท้อน",(s)=>s.length>2?s[s.length-3]:lastOf(s)],
+ ["Inertia","แรงค้าง",(s)=>cnt(s.slice(-4),lastOf(s))>=3?lastOf(s):opp(lastOf(s))],
+ ["Parity","เลขคู่",(s)=>s.length%2?lastOf(s):opp(lastOf(s))],
+ ["Ratio","อัตราส่วน",(s)=>cnt(s,'B')/(cnt(s,'P')+1)>1.15?'B':'P'],
+ ["Pulse","ชีพจร",(s)=>cnt(s.slice(-10),'B')===cnt(s.slice(-10),'P')?lastOf(s):opp(lastOf(s))],
+
+ ["Wave","คลื่น",(s)=>cnt(s.slice(-7),'B')>cnt(s.slice(-7),'P')?'P':'B'],
+ ["Rebound","เด้งกลับ",(s)=>s.slice(-2)[0]===s.slice(-2)[1]?opp(lastOf(s)):lastOf(s)],
+ ["Density","ความหนา",(s)=>cnt(s.slice(-9),lastOf(s))>=6?opp(lastOf(s)):lastOf(s)],
+ ["Shadow","เงาหลัง",(s)=>s.length>1?opp(s[s.length-2]):lastOf(s)],
+ ["Drift","ไหล",(s)=>cnt(s.slice(-12),'B')>cnt(s.slice(-12),'P')?'B':'P'],
+ ["Anchor","จุดยึด",(s)=>cnt(s.slice(-5),'B')===3?'B':'P'],
+ ["Snap","หักฉับ",(s)=>cnt(s.slice(-4),'B')===2?opp(lastOf(s)):lastOf(s)],
+ ["Swing","แกว่ง",(s)=>cnt(s.slice(-6),'P')>=4?'B':'P'],
+ ["Focus","โฟกัส",(s)=>cnt(s.slice(-3),'B')>=2?'B':'P'],
+ ["Mirror2","กระจก2",(s)=>s.length>3?s[s.length-4]:lastOf(s)],
+ ["Pressure","แรงกด",(s)=>cnt(s.slice(-8),'B')>=6?'P':'B'],
+ ["Tilt","เอียง",(s)=>cnt(s.slice(-10),'P')-cnt(s.slice(-10),'B')>=3?'P':'B'],
+ ["Edge","ขอบ",(s)=>cnt(s.slice(-11),'B')%3?'B':'P'],
+ ["Stability","เสถียร",(s)=>cnt(s.slice(-6),lastOf(s))>=4?lastOf(s):opp(lastOf(s))]
+]
+/* =========================================================
+   👑 333 ORACLE X — DEEP FUSION ENGINE
+   ไม่แทนที่ 24 สาย / DQN / VLMM / Markov
+   ทำหน้าที่เป็นชั้น Fusion เท่านั้น
+   ========================================================= */
+
+function oracle333Clamp(v,min=0,max=99){
+    return Math.max(min,Math.min(max,v));
+}
+
+function oracle333Last3(s){
+    return s.slice(-3).join('');
+}
+
+function oracle333CompletionScore(s,pick){
+
+    if(s.length < 4) return 0;
+
+    const recent = s.slice(-6);
+
+    let score = 50;
+
+    const last = recent[recent.length-1];
+
+    /*
+      =========================
+      1. STREAK
+      =========================
+    */
+
+    let streak = 1;
+
+    for(
+        let i=recent.length-2;
+        i>=0;
+        i--
+    ){
+
+        if(recent[i] === last)
+            streak++;
+        else
+            break;
+
+    }
+
+    if(streak >= 3){
+
+        score +=
+            pick === last
+            ? 18
+            : -10;
+
+    }
+
+    /*
+      =========================
+      2. 2+1 BLOCK
+      =========================
+    */
+
+    if(
+        recent.length >= 3
+    ){
+
+        const a =
+            recent[recent.length-3];
+
+        const b =
+            recent[recent.length-2];
+
+        const c =
+            recent[recent.length-1];
+
+        if(a === b && b !== c){
+
+            /*
+              มีบล็อก 2 ตัว
+            */
+
+            score +=
+                pick === a
+                ? 12
+                : -6;
+
+        }
+
+        /*
+          1 + 2
+        */
+
+        if(a !== b && b === c){
+
+            score +=
+                pick === c
+                ? 14
+                : -7;
+
+        }
+
+        /*
+          PBP / BPB
+        */
+
+        if(
+            a === c &&
+            a !== b
+        ){
+
+            score +=
+                pick === a
+                ? 16
+                : -8;
+
+        }
+
+    }
+
+    /*
+      =========================
+      3. RECENT PRESSURE
+      =========================
+    */
+
+    const p =
+        cnt(recent,'P');
+
+    const b =
+        cnt(recent,'B');
+
+    const total =
+        p+b;
+
+    if(total){
+
+        const rate =
+            pick === 'P'
+            ? p/total
+            : b/total;
+
+        score +=
+            (rate-0.5)*30;
+
+    }
+
+    /*
+      =========================
+      4. REGIME
+      =========================
+    */
+
+    const regime =
+        oracleRegime(s);
+
+    if(regime.name === 'TREND'){
+
+        score +=
+            pick === last
+            ? 10
+            : -8;
+
+    }
+
+    else if(
+        regime.name === 'PING-PONG'
+    ){
+
+        score +=
+            pick === opp(last)
+            ? 12
+            : -10;
+
+    }
+
+    else if(
+        regime.name === 'CHAOS'
+    ){
+
+        /*
+          Chaos = ลดความมั่นใจ
+        */
+
+        score =
+            50 +
+            (score-50)*0.45;
+
+    }
+
+    return oracle333Clamp(
+        score
+    );
+
+}
+
+function oracle333DNA(s,pick){
+
+    if(!s.length) return 0;
+
+    let correct=0;
+    let total=0;
+
+    /*
+      ใช้ผลจริงจาก 24 strategy
+      ไม่สร้าง accuracy ใหม่แบบสุ่ม
+    */
+
+    strategyDefs.forEach((def,i)=>{
+
+        if(!dna[i] || !dna[i].length) return;
+
+        const rate=acc(dna[i]);
+
+        if(rate>0){
+
+            total++;
+
+            const strategyPick=def[2](s);
+
+            if(strategyPick===pick){
+                correct += rate;
+            }
+
+        }
+
+    });
+
+    if(!total) return 0;
+
+    return oracle333Clamp(correct/total);
+}
+
+
+function oracle333HistoricalFit(s,pick){
+
+    if(s.length<6) return 0;
+
+    let total=0;
+    let hit=0;
+
+    /*
+      ใช้ pattern memory ที่มีอยู่จริง
+    */
+
+    for(let depth=2;depth<=Math.min(8,s.length);depth++){
+
+        const state=s.slice(-depth).join('');
+        const mem=patternMemory[state];
+
+        if(!mem) continue;
+
+        const n=mem.P+mem.B;
+
+        if(n<3) continue;
+
+        total += n;
+
+        const historicalPick =
+            mem.P>=mem.B ? 'P':'B';
+
+        if(historicalPick===pick){
+            hit += n;
+        }
+
+    }
+
+    if(!total) return 0;
+
+    return oracle333Clamp(hit/total*100);
+}
+
+
+function oracle333MemoryScore(s,pick){
+
+    const weighted=getWeightedVLMM(s);
+
+    if(!weighted) return 0;
+
+    const scoreP=weighted.scoreP || 0;
+    const scoreB=weighted.scoreB || 0;
+
+    const total=Math.abs(scoreP)+Math.abs(scoreB);
+
+    if(!total) return 0;
+
+    const selected =
+        pick==='P' ? scoreP : scoreB;
+
+    if(selected<=0) return 0;
+
+    return oracle333Clamp(
+        selected/total*100
+    );
+}
+
+
+function oracle333MarkovScore(s,pick){
+
+    if(s.length<2) return 0;
+
+    const state=s.slice(-2).join('');
+
+    const decision=getMarkovDecision(state);
+
+    if(!decision) return 0;
+
+    if(decision.pick===pick){
+
+        return oracle333Clamp(
+            decision.confidence
+        );
+
+    }
+
+    return oracle333Clamp(
+        100-decision.confidence
+    );
+}
+
+
+function oracle333DQNScore(s,pick){
+
+    if(!dqnMode) return 0;
+
+    const state=getState(s);
+
+    if(!state) return 0;
+
+    const q=getQ(state);
+
+    const p=Math.max(0,q.P);
+    const b=Math.max(0,q.B);
+
+    const total=p+b;
+
+    if(total===0) return 0;
+
+    const selected =
+        pick==='P' ? p:b;
+
+    return oracle333Clamp(
+        selected/total*100
+    );
+}
+
+
+function oracle333Momentum(s,pick){
+
+    if(s.length<4) return 0;
+
+    const recent=s.slice(-4);
+
+    let same=0;
+
+    recent.forEach(x=>{
+        if(x===pick) same++;
+    });
+
+    return oracle333Clamp(
+        same/recent.length*100
+    );
+}
+
+
+/* =====================================================
+   👑 HISTORICAL CONFIDENCE
+   ใช้ Pattern Memory ที่มีอยู่จริง
+   ===================================================== */
+
+function oracleHistoricalConfidence(s){
+
+    if(!s || s.length < 6){
+        return 50;
+    }
+
+    let totalWeight = 0;
+    let weightedConfidence = 0;
+
+    const maxDepth = Math.min(8, s.length);
+
+    for(let depth = 2; depth <= maxDepth; depth++){
+
+        const state =
+            s.slice(-depth).join('');
+
+        const mem =
+            patternMemory[state];
+
+        if(!mem) continue;
+
+        const p = mem.P || 0;
+        const b = mem.B || 0;
+
+        const total = p + b;
+
+        if(total < 3) continue;
+
+        const dominance =
+            Math.max(p,b) / total * 100;
+
+        const sampleWeight =
+            Math.log(total + 1);
+
+        weightedConfidence +=
+            dominance * sampleWeight;
+
+        totalWeight +=
+            sampleWeight;
+    }
+
+    if(totalWeight === 0){
+        return 50;
+    }
+
+    return oracle333Clamp(
+        weightedConfidence / totalWeight
+    );
+}
+// =====================================================
+// 👑 ORACLE REGIME ENGINE
+// =====================================================
+
+function oracleRegime(s){
+
+    if(s.length < 6){
+
+        return {
+            name:"INSUFFICIENT",
+            confidence:0
+        };
+
+    }
+
+    const recent = s.slice(-8);
+
+    let switches = 0;
+
+    for(let i=1;i<recent.length;i++){
+
+        if(recent[i] !== recent[i-1])
+            switches++;
+
+    }
+
+    const switchRate =
+        switches / (recent.length - 1);
+
+    const last = recent[recent.length-1];
+
+    let streak = 1;
+
+    for(
+        let i=recent.length-2;
+        i>=0;
+        i--
+    ){
+
+        if(recent[i] === last)
+            streak++;
+        else
+            break;
+
+    }
+
+    /*
+      TREND
+    */
+
+    if(streak >= 4){
+
+        return {
+            name:"TREND",
+            confidence:
+                Math.min(99,50+streak*8)
+        };
+
+    }
+
+    /*
+      PING-PONG
+    */
+
+    if(switchRate >= 0.85){
+
+        return {
+            name:"PING-PONG",
+            confidence:
+                Math.round(switchRate*100)
+        };
+
+    }
+
+    /*
+      MIXED / CHAOS
+    */
+
+    if(switchRate >= 0.65){
+
+        return {
+            name:"CHAOS",
+            confidence:
+                Math.round(switchRate*100)
+        };
+
+    }
+
+    return {
+        name:"BLOCK",
+        confidence:
+            Math.round(
+                (1-switchRate)*100
+            )
+    };
+
+}
+
+function oracle333Build(s){
+
+    if(s.length < 6){
+
+        return {
+            ready:false
+        };
+
+    }
+
+const regime =
+    oracleRegime(s);
+
+
+// =============================================
+// 👑 REGIME ADAPTIVE WEIGHT
+// =============================================
+
+const weights =
+    oracleAdaptiveWeights(
+        regime.name
+    );
+
+    /*
+      =========================
+      ENGINE PREDICTIONS
+      =========================
+    */
+
+    let dnaP=0;
+    let dnaB=0;
+
+    strategyDefs.forEach((def,i)=>{
+
+        if(!last[i]) return;
+
+        const rate =
+            acc(dna[i]);
+
+        /*
+          สายที่แม่นกว่ามีอิทธิพลมากกว่า
+        */
+
+        const strength =
+            Math.max(
+                0.25,
+                rate/100
+            );
+
+        if(last[i] === 'P')
+            dnaP += strength;
+
+        else
+            dnaB += strength;
+
+    });
+
+    const dnaTotal =
+        dnaP+dnaB;
+
+    const dnaPick =
+        dnaTotal
+        ? dnaP>=dnaB?'P':'B'
+        : null;
+
+    const dnaConfidence =
+        dnaTotal
+        ? Math.max(
+            dnaP,
+            dnaB
+          )/dnaTotal*100
+        : 50;
+
+
+    /*
+      VLMM
+    */
+
+    const weighted =
+        getWeightedVLMM(s);
+
+    const vlmmPick =
+        weighted
+        ? weighted.pick
+        : null;
+
+    const vlmmConfidence =
+        weighted
+        ? weighted.confidence
+        : 50;
+
+
+    /*
+      MARKOV
+    */
+
+    const markov =
+        getMarkovDecision(
+            s.slice(-2).join('')
+        );
+
+    const markovPick =
+        markov
+        ? markov.pick
+        : null;
+
+    const markovConfidence =
+        markov
+        ? markov.confidence
+        : 50;
+
+
+    /*
+      DQN
+    */
+
+    let dqnPick=null;
+    let dqnConfidence=50;
+
+    if(dqnMode){
+
+        const state =
+            getState(s);
+
+        if(state){
+
+            const q =
+                getQ(state);
+
+            const total =
+                Math.abs(q.P)+
+                Math.abs(q.B);
+
+            if(total>0){
+
+                dqnPick =
+                    q.P>q.B
+                    ? 'P'
+                    : q.B>q.P
+                    ? 'B'
+                    : null;
+
+                if(dqnPick){
+
+                    const selected =
+                        dqnPick==='P'
+                        ? q.P
+                        : q.B;
+
+                    dqnConfidence =
+                        Math.min(
+                            99,
+                            50 +
+                            (
+                              Math.abs(selected)/
+                              total
+                            )*50
+                        );
+
+                }
+
+            }
+
+        }
+
+    }
+
+/*
+  =========================
+  MOMENTUM
+  =========================
+*/
+
+const currentLast =
+    s[s.length-1];
+
+let momentumPick =
+    currentLast;
+
+let momentumConfidence =
+    50;
+
+if(s.length>=4){
+
+    const recent =
+        s.slice(-4);
+
+    const p =
+        cnt(recent,'P');
+
+    const b =
+        cnt(recent,'B');
+
+    if(p>b){
+
+        momentumPick='P';
+
+        momentumConfidence =
+            50 +
+            (p-b)*12;
+
+    }
+    else if(b>p){
+
+        momentumPick='B';
+
+        momentumConfidence =
+            50 +
+            (b-p)*12;
+
+    }
+
+    momentumConfidence =
+        Math.min(
+            90,
+            momentumConfidence
+        );
+
+}
+
+
+    /*
+      333 BLOCK
+    */
+
+    const blockP =
+        oracle333CompletionScore(
+            s,'P'
+        );
+
+    const blockB =
+        oracle333CompletionScore(
+            s,'B'
+        );
+
+    const blockPick =
+        blockP>=blockB
+        ? 'P'
+        : 'B';
+
+    const blockConfidence =
+        Math.max(
+            blockP,
+            blockB
+        );
+
+
+    /*
+      =========================
+      FUSION
+      =========================
+    */
+
+    const result = {
+
+        P:{
+            score:0
+        },
+
+        B:{
+            score:0
+        }
+
+    };
+
+
+    function addEngine(
+        name,
+        pick,
+        confidence
+    ){
+
+        if(!pick) return;
+
+        /*
+          confidence 50 = กลาง
+          confidence 80 = strong
+        */
+
+        const edge =
+            (
+                confidence-50
+            ) / 50;
+
+        /*
+          ไม่ให้โมเดลที่ confidence ต่ำ
+          มีแรงเกินจริง
+        */
+
+        const contribution =
+            Math.max(
+                -1,
+                Math.min(
+                    1,
+                    edge
+                )
+            ) *
+            weights[name];
+
+        result[pick].score +=
+            contribution;
+
+    }
+
+
+    addEngine(
+        "DNA",
+        dnaPick,
+        dnaConfidence
+    );
+
+    addEngine(
+        "VLMM",
+        vlmmPick,
+        vlmmConfidence
+    );
+
+    addEngine(
+        "MARKOV",
+        markovPick,
+        markovConfidence
+    );
+
+    addEngine(
+        "DQN",
+        dqnPick,
+        dqnConfidence
+    );
+
+    addEngine(
+        "MOMENTUM",
+        momentumPick,
+        momentumConfidence
+    );
+
+    addEngine(
+        "BLOCK333",
+        blockPick,
+        blockConfidence
+    );
+
+
+    /*
+      =========================
+      CONVERT TO 0-100
+      =========================
+    */
+
+    const rawP =
+        50 + result.P.score*50;
+
+    const rawB =
+        50 + result.B.score*50;
+
+
+    /*
+      =========================
+      REGIME FILTER
+      =========================
+    */
+
+    let finalP=rawP;
+    let finalB=rawB;
+
+
+    if(regime.name === 'TREND'){
+
+    if(currentLast === 'P')
+    finalP += 5;
+else
+    finalB += 5;
+
+    }
+
+
+    if(
+        regime.name === 'PING-PONG'
+    ){
+
+      if(currentLast === 'P')
+    finalB += 7;
+else
+    finalP += 7;
+
+    }
+
+
+    /*
+      CHAOS = ลดความแรง
+    */
+
+    if(regime.name === 'CHAOS'){
+
+        finalP =
+            50+(finalP-50)*0.55;
+
+        finalB =
+            50+(finalB-50)*0.55;
+
+    }
+
+
+    finalP =
+        oracle333Clamp(finalP);
+
+    finalB =
+        oracle333Clamp(finalB);
+
+
+    /*
+      =========================
+      GAP
+      =========================
+    */
+
+    const gap =
+        Math.abs(
+            finalP-finalB
+        );
+
+
+    /*
+      =========================
+      MODEL AGREEMENT
+      =========================
+    */
+
+    const picks = [
+
+        dnaPick,
+        vlmmPick,
+        markovPick,
+        dqnPick,
+        momentumPick,
+        blockPick
+
+    ].filter(Boolean);
+
+    let agree=0;
+
+    if(picks.length){
+
+        const winner =
+            finalP>=finalB
+            ? 'P'
+            : 'B';
+
+        agree =
+            picks.filter(
+                x=>x===winner
+            ).length
+            /picks.length
+            *100;
+
+    }
+
+
+    /*
+      =========================
+      DATA QUALITY
+      =========================
+    */
+
+    const dataQuality =
+        Math.min(
+            99,
+            s.length/60*100
+        );
+
+
+    /*
+      =========================
+      SAMPLE STRENGTH
+      =========================
+    */
+
+    const sampleStrength =
+        Math.min(
+            99,
+            Math.log(s.length+1)/
+            Math.log(61)*100
+        );
+
+
+    /*
+      =========================
+      CONFLICT
+      =========================
+    */
+
+    const conflict =
+        100-agree;
+
+
+    /*
+      =========================
+      DYNAMIC THRESHOLD
+      =========================
+    */
+
+    let threshold = 12;
+
+    /*
+      ข้อมูลน้อย → ต้องเข้มขึ้น
+    */
+
+    if(s.length < 12)
+        threshold = 18;
+
+    else if(s.length < 20)
+        threshold = 15;
+
+    /*
+      Chaos → เข้มขึ้น
+    */
+
+    if(regime.name === 'CHAOS')
+        threshold += 6;
+
+
+    /*
+      =========================
+      PRIMARY
+      =========================
+    */
+
+    let primary =
+        finalP>=finalB
+        ? 'P'
+        : 'B';
+
+    let secondary =
+        primary==='P'
+        ? 'B'
+        : 'P';
+
+    const primaryScore =
+        primary==='P'
+        ? finalP
+        : finalB;
+
+    const secondaryScore =
+        primary==='P'
+        ? finalB
+        : finalP;
+
+
+
+
+    /*
+      =========================
+      CALIBRATED CONFIDENCE
+      =========================
+    */
+
+    let calibrated =
+        50 +
+        gap*0.75 +
+        (agree-50)*0.20 +
+        (sampleStrength-50)*0.10;
+
+
+    /*
+      ลด confidence เมื่อ conflict สูง
+    */
+
+    calibrated -=
+        conflict*0.12;
+
+
+    /*
+      CHAOS penalty
+    */
+
+    if(regime.name === 'CHAOS')
+        calibrated -= 8;
+
+
+    calibrated =
+        oracle333Clamp(
+            calibrated
+        );
+
+/*
+  =========================================
+  👑 333 FINAL 2-LEVEL BET GATE
+  =========================================
+
+  ระบบนี้ "แทงทุกตา"
+
+  🔥 HARD BET
+  = สัญญาณแข็ง
+  = confidence >= 56
+  = gap >= 8
+  = agreement >= 50
+
+  🟡 SOFT BET
+  = ทุกกรณีที่ไม่ถึง HARD BET
+
+  สำคัญ:
+  ไม่มี HARD WAIT แล้ว
+  Fusion ยังเลือก P/B ตามโมเดลเดิม
+  Gate มีหน้าที่แบ่ง "ระดับความแรง" เท่านั้น
+*/
+
+let decisionLevel = "SOFT_BET";
+
+const hardConfidence =
+    calibrated >= 56;
+
+const hardGap =
+    gap >= 8;
+
+const hardAgreement =
+    agree >= 50;
+
+
+/*
+  🔥 HARD BET
+*/
+
+if(
+    hardConfidence &&
+    hardGap &&
+    hardAgreement
+){
+
+    decisionLevel = "HARD_BET";
+
+}
+
+
+/*
+  🟡 SOFT BET
+  ทุกกรณีที่ไม่เข้า HARD BET
+*/
+
+else{
+
+    decisionLevel = "SOFT_BET";
+
+}
+
+
+/*
+  ระบบแทงทุกตา
+  จึงไม่มี WAIT
+*/
+
+const waitReason = null;
+    /*
+      =========================
+      SAVE FORECAST
+      =========================
+    */
+
+if(!oracleLastForecast){
+
+oracleLastForecast = {
+
+    primary,
+
+    confidence: calibrated,
+
+
+    // =============================================
+    // 🔥 จำ Regime ตอนสร้าง Forecast
+    // =============================================
+
+    regime:
+        regime.name,
+
+
+    engines:{
+
+        DNA:
+            dnaPick,
+
+        VLMM:
+            vlmmPick,
+
+        MARKOV:
+            markovPick,
+
+        DQN:
+            dqnPick,
+
+        MOMENTUM:
+            momentumPick,
+
+        BLOCK333:
+            blockPick
+
+    }
+
+};
+
+}
+    /* =========================
+       HISTORICAL PATTERN
+       ========================= */
+
+ const historicalConfidence =
+    typeof oracleHistoricalConfidence === "function"
+        ? oracleHistoricalConfidence(s)
+        : 50;
+return {
+
+    ready: true,
+
+    primary,
+
+    secondary,
+
+    fusionScore:
+        primaryScore,
+
+    calibrated,
+
+    gap,
+
+    modelAgreement:
+        agree,
+
+    conflict,
+
+    collisionRisk:
+        Math.max(
+            0,
+            conflict - gap
+        ),
+
+    dataQuality,
+
+    sampleStrength,
+
+    regime,
+
+   /*
+  =========================================
+  👑 FINAL BET MODE
+  =========================================
+*/
+
+decisionLevel,
+
+betMode:
+    decisionLevel === "HARD_BET"
+        ? "HARD_BET"
+        : "SOFT_BET",
+
+/*
+  แทงทุกตา
+*/
+
+wait:false,
+
+waitReason:null,
+
+           P:{ 
+            score:finalP, 
+
+            dna:dnaConfidence,
+
+            historical:
+                historicalConfidence,
+
+            memory:
+                vlmmConfidence,
+
+            markov:
+                markovConfidence,
+
+            dqn:
+                dqnConfidence,
+
+            momentum:
+                momentumConfidence,
+
+            completion:
+                blockP
+        },
+
+          B:{ 
+            score:finalB, 
+
+            dna:dnaConfidence,
+
+            historical:
+                historicalConfidence,
+
+            memory:
+                vlmmConfidence,
+
+            markov:
+                markovConfidence,
+
+            dqn:
+                dqnConfidence,
+
+            momentum:
+                momentumConfidence,
+
+            completion:
+                blockB
+        },
+
+        weights
+
+    };
+
+}
+// =====================================================
+// 👑 RENDER REGIME ENGINE PERFORMANCE
+// =====================================================
+
+function oracleRegimePerformanceHTML(){
+
+    const label = {
+
+        TREND:
+            "🔥 TREND",
+
+        "PING-PONG":
+            "🔄 PING-PONG",
+
+        BLOCK:
+            "🧱 BLOCK",
+
+        CHAOS:
+            "⚠️ CHAOS"
+
+    };
+
+
+    return `
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ REGIME AI PERFORMANCE ━━━━━
+            </div>
+
+
+            ${
+                ORACLE_ENGINES.map(name => {
+
+                    const values =
+                        ORACLE_REGIMES.map(regime => {
+
+                            const rate =
+                                oracleRegimeHitRate(
+                                    name,
+                                    regime
+                                );
+
+                            return `
+                                <span style="
+                                    margin-left:5px;
+                                    white-space:nowrap;
+                                ">
+                                    ${label[regime]}
+                                    ${
+                                        rate === null
+                                        ? '--'
+                                        : rate.toFixed(0) + '%'
+                                    }
+                                </span>
+                            `;
+
+                        }).join("");
+
+
+                    const displayName =
+                        name === "BLOCK333"
+                        ? "333 Block"
+                        : name === "MARKOV"
+                        ? "Markov"
+                        : name === "MOMENTUM"
+                        ? "Momentum"
+                        : name;
+
+
+                    return `
+
+                        <div
+                            class="oracle-row"
+                            style="
+                                display:block;
+                                line-height:1.8;
+                            "
+                        >
+
+                            <div>
+                                <b>
+                                    ${displayName}
+                                </b>
+                            </div>
+
+                            <div
+                                style="
+                                    font-size:11px;
+                                    color:#00ffff;
+                                "
+                            >
+                                ${values}
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }).join("")
+            }
+
+        </div>
+
+    `;
+
+}
+// =========================================================
+// 👑 MINI 333 FINAL FUSION RENDER
+// แสดงผลซ้ำจาก 333 Oracle ตัวจริง
+// ไม่คำนวณคะแนนใหม่
+// =========================================================
+
+function renderMiniFinalFusion(oracle){
+
+    const box =
+        document.getElementById("miniFinalFusion");
+
+    if(!box) return;
+
+    if(!oracle || !oracle.ready){
+
+        document.getElementById("miniFusionPick").textContent =
+            "รอข้อมูล";
+
+        document.getElementById("miniFusionScore").textContent =
+            "0.0";
+
+        document.getElementById("miniFusionConfidence").textContent =
+            "0.0%";
+
+        document.getElementById("miniFusionGate").style.width =
+            "0%";
+
+        return;
+    }
+
+    const pick = oracle.primary;
+
+    const isHardBet =
+        oracle.betMode === "HARD_BET";
+
+    const pickColor =
+        pick === "P"
+            ? "#4fc3ff"
+            : "#ff6666";
+
+    const pickText =
+        pick === "P"
+            ? "PLAYER (P)"
+            : "BANKER (B)";
+
+    const modeText =
+        isHardBet
+            ? "🔥 HARD BET"
+            : "🟡 SOFT BET";
+
+    const lockText =
+        isHardBet
+            ? "🔥 333 HARD BET — ล็อกเป้า"
+            : "🟡 333 SOFT BET — แทงตามสัญญาณ";
+
+    const detailText =
+        isHardBet
+            ? "🔥 HARD BET<br>สัญญาณผ่าน Confidence / Gap / Agreement"
+            : "🟡 SOFT BET<br>สัญญาณยังไม่ถึงระดับ HARD แต่ระบบยังแทงทุกตา";
+
+    const pickEl =
+        document.getElementById("miniFusionPick");
+
+    const modeEl =
+        document.getElementById("miniFusionMode");
+
+    const scoreEl =
+        document.getElementById("miniFusionScore");
+
+    const confidenceEl =
+        document.getElementById("miniFusionConfidence");
+
+    const gateEl =
+        document.getElementById("miniFusionGate");
+
+    const lockEl =
+        document.getElementById("miniFusionLock");
+
+    const detailEl =
+        document.getElementById("miniFusionDetail");
+
+
+    /* =========================
+       PLAYER / BANKER
+       ========================= */
+
+    pickEl.textContent = pickText;
+
+    pickEl.style.color =
+        pickColor;
+
+
+    /* =========================
+       HARD / SOFT
+       ========================= */
+
+    modeEl.textContent =
+        modeText;
+
+    modeEl.style.color =
+        isHardBet
+            ? "#00ff99"
+            : "#ffd700";
+
+
+    /* =========================
+       FUSION SCORE
+       ========================= */
+
+    scoreEl.textContent =
+        Number(oracle.fusionScore || 0)
+        .toFixed(1);
+
+
+    /* =========================
+       CALIBRATED CONFIDENCE
+       ========================= */
+
+    const calibrated =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(oracle.calibrated || 0)
+            )
+        );
+
+    confidenceEl.textContent =
+        calibrated.toFixed(1) + "%";
+
+
+    /* =========================
+       GATE BAR
+       ========================= */
+
+    gateEl.style.width =
+        calibrated + "%";
+
+
+    /* =========================
+       FINAL LOCK
+       ========================= */
+
+    lockEl.textContent =
+        lockText;
+
+    lockEl.style.color =
+        isHardBet
+            ? "#00ff99"
+            : "#ffd700";
+
+
+    /* =========================
+       DETAIL
+       ========================= */
+
+    detailEl.innerHTML =
+        detailText;
+
+}
+
+// =====================================================
+// 👑 RENDER 333 ORACLE
+// =====================================================
+
+function renderOracle333(){
+
+    const box = document.getElementById("oracle333Content");
+
+    if(!box) return;
+
+    try{
+
+        const s = history.filter(x => x !== 'T');
+
+        // ===== ยังมีข้อมูลไม่ถึง 6 ตา =====
+        if(s.length < 6){
+
+            box.innerHTML = `
+                <div style="
+                    text-align:center;
+                    padding:8px;
+                    color:#ffd700;
+                    font-size:15px;
+                    font-weight:bold;
+                ">
+                     333 Oracle กำลังรอข้อมูล
+                </div>
+
+                <div style="
+                    text-align:center;
+                    margin-top:6px;
+                    color:#aaa;
+                    font-size:13px;
+                ">
+                    ต้องมีผล P/B อย่างน้อย 6 ตา
+                    <br>
+                    ขณะนี้มี ${s.length} / 6 ตา
+                </div>
+            `;
+
+            return;
+        }
+
+
+        // ===== BUILD ORACLE =====
+
+ const oracle = oracle333Build(s);
+
+renderMiniFinalFusion(oracle);
+
+if(!oracle || !oracle.ready){
+    box.innerHTML = `
+        <div style="
+            text-align:center;
+            color:#ffd700;
+            padding:10px;
+        ">
+             รอข้อมูล...
+        </div>
+    `;
+    return;
+}
+
+
+        // ===== DATA =====
+
+        const pick = oracle.primary;
+
+        const opposite =
+            pick === 'P' ? 'B' : 'P';
+
+        const isWaiting = false;
+
+const isHardBet =
+    oracle.betMode === "HARD_BET";
+
+        const data = oracle[pick];
+
+        const pickColor =
+            pick === 'P'
+            ? '#4fc3ff'
+            : '#ff6666';
+
+
+        const historicalPick =
+            oracle.P.historical >= oracle.B.historical
+            ? 'P'
+            : 'B';
+
+        const memoryPick =
+            oracle.P.memory >= oracle.B.memory
+            ? 'P'
+            : 'B';
+
+        const markovPick =
+            oracle.P.markov >= oracle.B.markov
+            ? 'P'
+            : 'B';
+
+        const dqnPick =
+            oracle.P.dqn >= oracle.B.dqn
+            ? 'P'
+            : 'B';
+
+
+        // ===== RENDER =====
+
+        box.innerHTML = `
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                🧬 DNA BLOCK
+            </div>
+
+            <div class="oracle-row">
+
+                <span>โครงสร้างล่าสุด</span>
+
+                <b class="oracle-value oracle-yellow">
+                    ${s.slice(-3).join(' ━ ')}
+                </b>
+
+            </div>
+
+            <div class="oracle-row">
+
+                <span>ความตรงกัน DNA</span>
+
+                <b class="oracle-cyan">
+                    ${data.dna.toFixed(1)}%
+                </b>
+
+            </div>
+
+            <div class="oracle-row">
+
+                <span>ความสอดคล้องในอดีต</span>
+
+                <b class="oracle-cyan">
+                    ${data.historical.toFixed(1)}%
+                </b>
+
+            </div>
+
+            <div class="oracle-row">
+
+                <span>สถานะตลาด</span>
+
+                <b class="oracle-green">
+                    ${
+                        oracle.regime.name === 'TREND'
+                        ? '🔥 TREND'
+                        : oracle.regime.name === 'PING-PONG'
+                        ? '🔄 PING-PONG'
+                        : oracle.regime.name === 'CHAOS'
+                        ? '⚠️ CHAOS'
+                        : '🧱 BLOCK'
+                    }
+                </b>
+
+            </div>
+
+        </div>
+
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ การพยากรณ์หลายชั้น ━━━━━
+            </div>
+
+            <div class="oracle-row">
+
+                <span>ระบบความจำ</span>
+
+                <b class="oracle-p">
+                    ${historicalPick}
+                    ${Math.round(
+                        Math.max(
+                            oracle.P.historical,
+                            oracle.B.historical
+                        )
+                    )}%
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>VLMM</span>
+
+                <b class="oracle-cyan">
+                    ${memoryPick}
+                    ${Math.round(
+                        Math.max(
+                            oracle.P.memory,
+                            oracle.B.memory
+                        )
+                    )}%
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>DQN</span>
+
+                <b>
+                    ${
+                        dqnMode
+                        ? `${dqnPick} ${Math.round(
+                            Math.max(
+                                oracle.P.dqn,
+                                oracle.B.dqn
+                            )
+                        )}%`
+                        : 'ปิด'
+                    }
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>Markov</span>
+
+                <b>
+                    ${markovPick}
+                    ${Math.round(
+                        Math.max(
+                            oracle.P.markov,
+                            oracle.B.markov
+                        )
+                    )}%
+                </b>
+
+            </div>
+
+        </div>
+
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ การวิเคราะห์ความขัดแย้ง ━━━━━
+            </div>
+
+            <div class="oracle-row">
+
+                <span>แรงสนับสนุน P</span>
+
+                <b class="oracle-p">
+                    ${oracle.P.score.toFixed(1)}
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>แรงสนับสนุน B</span>
+
+                <b class="oracle-b">
+                    ${oracle.B.score.toFixed(1)}
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>โมเดลเห็นตรงกัน</span>
+
+                <b>
+                    ${oracle.modelAgreement.toFixed(1)}%
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>ความเสี่ยงชนกัน</span>
+
+                <b class="oracle-yellow">
+                    ${oracle.collisionRisk.toFixed(1)}%
+                </b>
+
+            </div>
+
+        </div>
+
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ การจำลองสถานการณ์ ━━━━━
+            </div>
+
+            <div class="oracle-row">
+
+                <span>ถัดไป = ${pick}</span>
+
+                <b class="oracle-green">
+                    สำเร็จ ${Math.round(data.completion)}%
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>ถัดไป = ${opposite}</span>
+
+                <b class="oracle-b">
+                    ทำลายรูปแบบ
+                    ${Math.round(100-data.completion)}%
+                </b>
+
+            </div>
+
+        </div>
+
+
+        <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ MARKET REGIME ━━━━━
+            </div>
+
+            <div class="oracle-row">
+
+                <span>สภาวะตลาด</span>
+
+                <b class="oracle-yellow">
+                    ${oracle.regime.name}
+                </b>
+
+            </div>
+
+
+            <div class="oracle-row">
+
+                <span>ความชัดเจน</span>
+
+                <b class="oracle-cyan">
+                    ${oracle.regime.confidence}%
+                </b>
+
+            </div>
+
+        </div>
+
+
+               <div class="oracle-section">
+
+            <div class="oracle-section-title">
+                ━━━━━ ADAPTIVE META WEIGHT ━━━━━
+            </div>
+
+            <div class="oracle-row">
+                <span>DNA</span>
+                <b>
+                    ${(oracle.weights.DNA*100).toFixed(1)}%
+                </b>
+            </div>
+
+            <div class="oracle-row">
+                <span>VLMM</span>
+                <b>
+                    ${(oracle.weights.VLMM*100).toFixed(1)}%
+                </b>
+            </div>
+
+            <div class="oracle-row">
+                <span>Markov</span>
+                <b>
+                    ${(oracle.weights.MARKOV*100).toFixed(1)}%
+                </b>
+            </div>
+
+            <div class="oracle-row">
+                <span>DQN</span>
+                <b>
+                    ${(oracle.weights.DQN*100).toFixed(1)}%
+                </b>
+            </div>
+
+            <div class="oracle-row">
+                <span>Momentum</span>
+                <b>
+                    ${(oracle.weights.MOMENTUM*100).toFixed(1)}%
+                </b>
+            </div>
+
+            <div class="oracle-row">
+                <span>333 Block</span>
+                <b>
+                    ${(oracle.weights.BLOCK333*100).toFixed(1)}%
+                </b>
+            </div>
+
+        </div>
+
+
+        <!-- 🔥 เพิ่มตรงนี้ -->
+
+        ${oracleRegimePerformanceHTML()}
+
+
+        <!-- 👑 แล้วค่อย FINAL FUSION -->
+
+        <div class="oracle-final">
+
+    <div class="oracle-section-title">
+        ━━━━━ 👑 333 FINAL FUSION ━━━━━
+    </div>
+
+
+            <div style="
+                font-size:14px;
+                color:#ffd700;
+                font-weight:bold;
+            ">
+                ตัวเลือกหลัก
+            </div>
+
+
+       <div
+    class="oracle-pick"
+    style="color:${pickColor}">
+
+    ${
+        pick === 'P'
+        ? 'PLAYER'
+        : 'BANKER'
+    }
+
+    <span style="
+        font-size:18px;
+        opacity:.8;
+    ">
+        (${pick})
+    </span>
+
+</div>
+
+<div style="
+    margin-top:8px;
+    font-size:18px;
+    font-weight:900;
+    color:${isHardBet ? '#00ff99' : '#ffd700'};
+">
+
+    ${
+        isHardBet
+        ? '🔥 HARD BET'
+        : '🟡 SOFT BET'
+    }
+
+</div>
+
+            <div class="oracle-score">
+
+                🔥 คะแนนฟิวชัน
+                ${oracle.fusionScore.toFixed(1)}
+
+            </div>
+
+
+            <div style="
+                margin-top:6px;
+                font-size:14px;
+            ">
+
+                ค่าความมั่นใจปรับเทียบ
+
+                <b class="oracle-cyan">
+                    ${oracle.calibrated.toFixed(1)}%
+                </b>
+
+            </div>
+
+
+            <div class="oracle-section">
+
+                <div class="oracle-section-title">
+                    🛡️ ด่านตัดสินใจ
+                </div>
+
+                <div class="oracle-gate">
+
+                    <div
+                        class="oracle-gate-fill"
+                        style="width:${oracle.calibrated}%">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+      <div
+    class="oracle-lock"
+    style="
+        color:
+        ${isHardBet
+            ? '#00ff99'
+            : '#ffd700'
+        };
+    "
+>
+
+    ${
+        isHardBet
+        ? '🔥 333 HARD BET — ล็อกเป้า'
+        : '🟡 333 SOFT BET — แทงตามสัญญาณ'
+    }
+
+    <br>
+
+    <span style="
+        font-size:14px;
+        color:${pickColor};
+    ">
+
+        ${
+            pick === 'P'
+            ? 'PLAYER (P)'
+            : 'BANKER (B)'
+        }
+
+    </span>
+
+</div>
+<div class="oracle-invalid">
+
+    ${
+        isHardBet
+
+        ? `
+            <b>🔥 HARD BET</b>
+            <br>
+            สัญญาณผ่าน Confidence / Gap / Agreement
+        `
+
+        : `
+            <b>🟡 SOFT BET</b>
+            <br>
+            สัญญาณยังไม่ถึงระดับ HARD
+            แต่ระบบยังแทงทุกตา
+        `
+    }
+
+</div>
+
+        </div>
+
+        `;
+
+    }catch(error){
+
+        console.error(
+            "333 ORACLE ERROR:",
+            error
+        );
+
+        box.innerHTML = `
+            <div style="
+                color:#ff6666;
+                text-align:center;
+                padding:10px;
+                font-size:13px;
+            ">
+                ❌ 333 Oracle ประมวลผลผิดพลาด
+                <br>
+                <span style="color:#aaa">
+                    ${error.message}
+                </span>
+            </div>
+        `;
+
+    }
+
+}
+function analyze(){
+ let s=history.filter(x=>x!=='T')
+ analysisGrid.innerHTML=""
+if(s.length < 6){
+
+    if(dqnMode){
+
+        const box =
+            document.getElementById("dqnInfo");
+
+        if(box)
+            box.innerHTML = "รอข้อมูล...";
+
+    }
+
+    summary.textContent =
+        "📊 รอข้อมูล...";
+
+    // ===== 👑 UPDATE 333 ORACLE EVEN BEFORE 6 HANDS =====
+    renderOracle333();
+
+    return;
+}
+
+let accList = dna.map(acc)
+let maxAcc = Math.max(...accList)
+
+if(maxAcc === 0){
+  maxAcc = -1   // กันไม่ให้ highlight ทุกสายตอนยังไม่เรียนรู้
+}
+let pCount=0
+let bCount=0
+
+
+ // ===== DQN PREDICT =====
+ let dqnPick = null
+
+ if(dqnMode){
+   let state = getState(s)
+
+
+   if(state){
+     let q = getQ(state)
+
+     dqnPick = chooseAction(state)
+
+// ===== VLMM BOOST =====
+
+let weightedVLMM =
+    getWeightedVLMM(s);
+
+let bestVLMM =
+    getBestVLMM(s);
+
+let markovDecision =
+    getMarkovDecision(
+        s.slice(-2).join("")
+    );
+
+// ===== PingPong Override =====
+if(isPingPong(s)){
+
+    weightedVLMM = {
+
+        pick:
+            s[s.length-1]=='P'
+            ? 'B'
+            : 'P',
+
+        confidence:98,
+
+        scoreP:0,
+
+        scoreB:0,
+
+        detail:[]
+
+    };
+
+}
+// ===== Markov Referee =====
+
+if(markovDecision){
+
+    if(markovDecision.pick ==
+       weightedVLMM.pick){
+
+        // เห็นตรงกัน
+
+        if(weightedVLMM.pick=="P"){
+
+            weightedVLMM.scoreP += 15;
+
+        }else{
+
+            weightedVLMM.scoreB += 15;
+
+        }
+
+    }else{
+
+        // เห็นไม่ตรงกัน
+
+        if(weightedVLMM.pick=="P"){
+
+            weightedVLMM.scoreP -= 15;
+
+        }else{
+
+            weightedVLMM.scoreB -= 15;
+
+        }
+
+        // Markov มั่นใจมาก พลิกผล
+
+        if(markovDecision.confidence>=80){
+
+            weightedVLMM.pick =
+                markovDecision.pick;
+
+        }
+
+    }
+
+    // คำนวณ Confidence ใหม่
+
+    let total =
+        weightedVLMM.scoreP +
+        weightedVLMM.scoreB;
+
+    weightedVLMM.confidence =
+        Math.min(
+            99,
+            Math.round(
+                Math.max(
+                    weightedVLMM.scoreP,
+                    weightedVLMM.scoreB
+                )/total*100
+            )
+        );
+
+}
+let memoryCount=0;
+
+const memBox = document.getElementById("memoryInfo");
+
+if (memBox) {
+    memBox.innerHTML = "กำลังเรียนรู้เค้าไพ่...";
+}
+
+if(bestVLMM){
+
+   let mem=patternMemory[bestVLMM.state];
+    memoryCount = mem.P + mem.B;
+
+    if (memoryCount > 1) {
+
+       let vlmmPick = bestVLMM.pick;
+
+        let percentP = Math.round(mem.P / memoryCount * 100);
+        let percentB = Math.round(mem.B / memoryCount * 100);
+
+        if (memBox) {
+let list=getVLMMPrediction(s);
+
+let table="";
+
+list.forEach(item=>{
+
+    let mem=patternMemory[item.state];
+
+    let total=mem.P+mem.B;
+
+    let win=Math.round(item.winRate*100);
+
+    table+=`
+
+    <div style="
+    margin-top:8px;
+    padding:8px;
+    border-radius:8px;
+    background:#071515;
+    border:1px solid rgba(255,255,255,.08);
+    text-align:left;">
+
+        <div style="
+        color:#ffd700;
+        font-weight:bold;
+        font-size:18px;">
+
+        ${item.state}
+
+        </div>
+
+        <div>
+        📌 ความยาวแพทเทิร์น :
+        <b>${item.depth}</b>
+        </div>
+
+        <div>
+        📊 จำนวนที่เคยเกิด :
+        <b>${total}</b> ครั้ง
+        </div>
+
+        <div>
+        ✅ อัตราชนะ :
+        <b style="color:#00ff99">
+        ${win}%
+        </b>
+        </div>
+
+        <div>
+         แนะนำ :
+        <b style="color:#00ffff">
+        ${item.pick}
+        </b>
+        </div>
+
+        <div>
+         คะแนน :
+        <b>
+        ${scoreVLMM(item).toFixed(2)}
+        </b>
+        </div>
+
+    </div>
+
+    `;
+
+});
+
+// 👇 เพิ่มตรงนี้
+const markovScore =
+    markovDecision
+        ? getMarkovScore(
+            s.slice(-2).join(""),
+            markovDecision.pick
+          )
+        : 0;
+memBox.innerHTML=`
+
+<div style="
+padding:12px;
+background:#002222;
+border-radius:12px;
+border:1px solid #00ffaa;">
+
+<div style="
+font-size:22px;
+font-weight:bold;
+color:#00ffff">
+
+ ระบบจดจำเค้าไพ่ (VLMM)
+
+</div>
+
+<br>
+
+${table}
+
+<hr style="
+border:none;
+border-top:1px solid rgba(255,255,255,.15);
+margin:12px 0;">
+
+<div style="
+font-size:22px;
+color:#00ff99;
+font-weight:bold;">
+
+ แนะนำสุดท้าย
+
+</div>
+
+แพทเทิร์น :
+
+<b style="color:#ffd700">
+${bestVLMM.state}
+</b>
+
+<br>
+
+เดิมพัน :
+
+<b style="
+font-size:24px;
+color:#00ff99">
+
+${weightedVLMM.pick}
+
+</b>
+
+<br>
+
+ความเชื่อมั่นรวม (Weighted Confidence)
+
+<b style="color:#00ffff">
+
+${weightedVLMM.confidence}%
+
+</b>
+
+<hr style="
+border:none;
+border-top:1px solid rgba(255,255,255,.15);
+margin:10px 0;">
+
+<div style="
+font-size:18px;
+font-weight:bold;
+color:#ffcc00;">
+
+ กรรมการ ห่วงโซ่ มาร์คอฟ
+
+</div>
+
+สถานะปัจจุบัน :
+
+<b style="color:#ffd700">
+
+${s.slice(-2).join("")}
+
+</b>
+
+<br>
+
+สถิติ Player :
+
+<b style="color:#4fc3ff">
+
+${markovMemory[s.slice(-2).join("")]?.P || 0} ครั้ง
+
+</b>
+
+<br>
+
+สถิติ Banker :
+
+<b style="color:#ff6666">
+
+${markovMemory[s.slice(-2).join("")]?.B || 0} ครั้ง
+
+</b>
+
+<br>
+
+ความเชื่อมั่น :
+
+<b style="color:#00ffff">
+
+${markovDecision ? markovDecision.confidence : 0}%
+
+</b>
+
+<br>
+
+ผลตัดสิน :
+
+<b style="
+font-size:22px;
+color:#00ff99">
+
+${markovDecision ? markovDecision.pick : "-"}
+
+</b>
+
+<hr style="
+border:none;
+border-top:1px solid rgba(255,255,255,.15);
+margin:10px 0;">
+
+คะแนน Player :
+
+${weightedVLMM.scoreP.toFixed(2)}
+
+<br>
+
+คะแนน Banker :
+
+${weightedVLMM.scoreB.toFixed(2)}
+
+<hr>
+
+คะแนน VLMM :
+
+<b style="color:#00ffff">
+${scoreVLMM(bestVLMM).toFixed(2)}
+</b>
+
+<br>
+
+คะแนน Markov :
+
+<b style="color:#ffcc00">
+${markovScore.toFixed(2)}
+</b>
+
+<br>
+
+คะแนนรวม :
+
+<b style="color:#00ff99">
+${(
+scoreVLMM(bestVLMM)
++
+markovScore
+).toFixed(2)}
+</b>
+
+</div>
+
+`;
+        }
+
+    }
+
+}
+
+
+     dqnLastState = state
+     dqnLastAction = dqnPick
+
+    const box = document.getElementById("dqnInfo")
+
+if (box) {
+
+  const total = dqnWin + dqnLose
+  const percent = total 
+    ? Math.round(dqnWin / total * 100) 
+    : 0
+
+let advice = ""
+
+if(percent < 50){
+  advice = "🔁 <b style='color:#ff4444'>ตานี้ควรเล่นสวน</b>"
+}
+else if(percent === 50){
+
+  const helperPick = q.P >= q.B ? 'P' : 'B'
+
+  advice = `
+    ⚖️ <b style='color:#ffd700'>50% (กลาง) จะหยุดรอ หรือ จะ แทงตาม ผู้ช่วยแนะนำ ด้านล่าง ผู้เล่นตัดสินใจเอง</b><br>
+    🤖 <b style='color:#00ffff'>
+    ผู้ช่วยแนะนำ: แทง ${helperPick}
+    </b>
+  `
+}
+else{
+  advice = "✅ <b style='color:#00ff99'>ตานี้ควรเล่นตาม</b>"
+}
+
+
+  box.innerHTML = `
+  State: <b>${state}</b><br>
+  Q(P) = ${q.P.toFixed(2)} |
+  Q(B) = ${q.B.toFixed(2)}<br>
+  เลือก: <b style="color:#00ffcc;font-size:18px">
+    ${dqnPick}
+  </b>
+
+  <div class="dqn-dna">
+    ${dqnHistory.join(" ")}
+  </div>
+
+  <div class="dqn-stat">
+    ชนะ ${dqnWin} | แพ้ ${dqnLose} |
+    ความแม่นยำ ${percent}%
+  </div>
+<div style="margin-top:8px;font-size:16px">
+${advice}
+</div>
+
+`
+}
+
+}
+
+} // 👈 ต้องมีปีกกานี้ปิด DQN ก่อน
+
+ strategyDefs.forEach((def,i)=>{
+  let pick=def[2](s)
+  last[i]=pick
+
+  if(acc(dna[i])===maxAcc){
+   if(pick==='P') pCount++
+   if(pick==='B') bCount++
+  }
+
+  analysisGrid.innerHTML+=`
+  <div class="analysis">
+   <h3>${i+1}) ${def[0]}</h3>
+   <div class="desc">${def[1]}</div>
+   <div>ตัวแทง:
+    <span class="${acc(dna[i])===maxAcc?'best':''}">${pick}</span>
+   </div>
+   <div class="per">ความแม่นยำ: ${acc(dna[i])}%</div>
+   <div class="dna-row">${dna[i].join(" ")}</div>
+  </div>`
+ })
+
+ let total=pCount+bCount
+
+summary.innerHTML= 
+ `📊 <b>เงื่อนไข</b><br> 
+ สาย % สูงสุด = ${maxAcc}%<br> 
+ จำนวนสายทั้งหมด = ${total} สาย<br> 
+ P = ${pCount} สาย<br> 
+ B = ${bCount} สาย`
+
+// =====================================================
+// 👑 333 ORACLE X — FINAL FUSION
+// ต้องอยู่หลัง 24 Strategy คำนวณเสร็จ
+// =====================================================
+
+renderOracle333();
+
+}
+
+function renderMiniRoad(){
+
+const grid=document.getElementById("miniGrid");
+
+grid.innerHTML="";
+
+history.forEach((r,i)=>{
+
+let d=document.createElement("div");
+
+d.className="miniCell mini"+r;
+
+d.innerHTML=r;
+
+d.style.gridColumn=Math.floor(i/6)+1;
+
+d.style.gridRow=i%6+1;
+
+grid.appendChild(d);
+
+});
+
+document.getElementById("miniP").innerHTML=
+cnt(history,"P");
+
+document.getElementById("miniB").innerHTML=
+cnt(history,"B");
+
+document.getElementById("miniT").innerHTML=
+cnt(history,"T");
+
+document.getElementById("miniTotal").innerHTML=
+history.length;
+
+}
+function layoutFloatControl(){
+
+    const box = document.getElementById("miniRoadBox");
+    const control = document.getElementById("floatControl");
+
+    if(!box || !control) return;
+
+    control.style.top =
+        (box.offsetTop + box.offsetHeight + 12) + "px";
+
+}
+
+
+// 🔥 เพิ่มตรงนี้
+window.addEventListener("resize", layoutFloatControl);
+
+
+render()
+// ===== SAVE AI MEMORY BEFORE REFRESH =====
+window.addEventListener("beforeunload", ()=>{
+  localStorage.setItem("patternMemory", JSON.stringify(patternMemory))
+  localStorage.setItem("Qmemory", JSON.stringify(Q))
+  localStorage.setItem("markovMemory", JSON.stringify(markovMemory))
+})
+
+// ===== LOAD AI MEMORY AFTER REFRESH =====
+window.addEventListener("load", ()=>{
+
+  const pm = localStorage.getItem("patternMemory")
+  const qm = localStorage.getItem("Qmemory")
+  const mm = localStorage.getItem("markovMemory")
+
+  if(pm) patternMemory = JSON.parse(pm)
+  if(qm) Q = JSON.parse(qm)
+  if(mm) markovMemory = JSON.parse(mm)
+
+  layoutFloatControl();
+
+})
+
+
+
+</script>
+</body>
+</html>
+
+
+
